@@ -2,8 +2,6 @@
 
 namespace App\Game\Domain\Service;
 
-// TODO - Check if this is the good namespace (domain) or if it should be somewhere else (infrastructure or presentation or application)
-
 use App\Game\Domain\Model\Entity\Level\LevelInterface;
 use App\Game\Domain\Model\Entity\World;
 
