@@ -1,0 +1,10 @@
+parameters:
+    level: 10
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    excludePaths:
+        - tests/bootstrap.php
