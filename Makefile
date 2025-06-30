@@ -13,3 +13,6 @@ deptrac-layers:
 
 test:
 	php bin/phpunit
+
+behat:
+	./vendor/bin/behat

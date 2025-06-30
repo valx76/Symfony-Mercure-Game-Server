@@ -4,7 +4,6 @@
 
 POC of a Habbo's inspired game server, developed using a clean architecture.
 
-
 ## Stack
 
 - PHP 8.4
@@ -13,7 +12,6 @@ POC of a Habbo's inspired game server, developed using a clean architecture.
 - Redis (worlds and players database)
 - RabbitMQ (Symfony Messenger's transport)
 - Docker
-
 
 ## Usage
 
@@ -25,7 +23,6 @@ Start local server:<br>
 
 Start the RabbitMQ consumer:<br>
 `symfony console messenger:consume`
-
 
 ## Tools
 
@@ -40,3 +37,6 @@ DEPTRAC (not working since it doesn't handle PHP 8.4 yet):<br>
 
 PHPUNIT:<br>
 `make test`
+
+BEHAT:<br>
+`make behat`

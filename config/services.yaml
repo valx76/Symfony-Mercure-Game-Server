@@ -1,41 +1,48 @@
 parameters:
 
 services:
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    _instanceof:
-        App\SharedContext\Application\Bus\MessageHandler:
-            tags:
-                - { name: messenger.message_handler }
+  _instanceof:
+    App\SharedContext\Application\Bus\MessageHandler:
+      tags:
+        - { name: messenger.message_handler }
 
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/**/Infrastructure/Framework/DependencyInjection/'
-            - '../src/**/Domain/Model/Entity/'
-            - '../src/**/Domain/Model/ValueObject/'
-            - '../src/SharedContext/Infrastructure/Framework/Kernel.php'
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/**/Infrastructure/Framework/DependencyInjection/'
+      - '../src/**/Domain/Model/Entity/'
+      - '../src/**/Domain/Model/ValueObject/'
+      - '../src/SharedContext/Infrastructure/Framework/Kernel.php'
 
-    App\Game\Domain\Service\AvailableWorldFinder:
-        arguments:
-            $maxPlayersPerWorld: '%env(int:WORLD_MAX_PLAYERS)%'
+  App\Game\Domain\Service\AvailableWorldFinder:
+    arguments:
+      $maxPlayersPerWorld: '%env(int:WORLD_MAX_PLAYERS)%'
 
-    App\Game\Application\UseCase\ConnectPlayer\ConnectPlayerHandler:
-        arguments:
-            $defaultLevelName: '%env(string:WORLD_DEFAULT_LEVEL)%'
+  App\Game\Application\UseCase\ConnectPlayer\ConnectPlayerHandler:
+    arguments:
+      $defaultLevelName: '%env(string:WORLD_DEFAULT_LEVEL)%'
 
-    Predis\Client:
-    Predis\ClientInterface: '@Predis\Client'
+  Predis\Client:
+  Predis\ClientInterface: '@Predis\Client'
 
 when@test:
-    services:
-        App\SharedContext\Infrastructure\Database\RedisDatabase:
-            autowire: true
-            arguments:
-                $keyPrefix: 'test-'
+  services:
+    _defaults:
+      autowire: true      # Automatically injects dependencies in your services.
+      autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-        Predis\ClientInterface:
-            alias: 'Predis\Client'
-            public: true
+    App\SharedContext\Infrastructure\Database\RedisDatabase:
+      autowire: true
+      arguments:
+        $keyPrefix: 'test-'
+
+    Predis\ClientInterface:
+      alias: 'Predis\Client'
+      public: true
+
+    App\Tests\Behat\:
+      resource: '../tests/Behat/*'
