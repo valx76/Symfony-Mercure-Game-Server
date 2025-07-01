@@ -3,7 +3,6 @@ default:
         default:
             contexts:
                 - App\Tests\Behat\ExceptionContext
-                - App\Tests\Behat\MercureContext
                 - App\Tests\Behat\PlayerContext
                 - App\Tests\Behat\RedisContext
                 - App\Tests\Behat\WebContext

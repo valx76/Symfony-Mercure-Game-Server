@@ -10,7 +10,7 @@ use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\AvailableWorldFinder;
 use App\Game\Domain\Service\LevelFactory;
-use App\Game\Domain\Service\LevelNormalizer;
+use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\Game\Domain\Service\NotificationGenerator;
 use App\SharedContext\Application\Bus\MessageHandler;
 
@@ -21,7 +21,7 @@ final readonly class ConnectPlayerHandler implements MessageHandler
         private WorldRepositoryInterface $worldRepository,
         private AvailableWorldFinder $availableWorldFinder,
         private LevelFactory $levelFactory,
-        private LevelNormalizer $levelNormalizer,
+        private LevelNormalizerInterface $levelNormalizer,
         private NotificationGenerator $notificationGenerator,
         private string $defaultLevelName,
     ) {
@@ -47,6 +47,10 @@ final readonly class ConnectPlayerHandler implements MessageHandler
         );
 
         $world->addPlayer($player);
+
+        // TODO - Check the below: if it fails, we potentially keep corrupted data in Redis
+        // -> See exceptions that can be thrown in Redis when using 'hset' and bubble up to here!
+        // --> Then try/catch and remove player from World, and remove Player
         $this->worldRepository->save($world);
         $this->playerRepository->save($player);
 

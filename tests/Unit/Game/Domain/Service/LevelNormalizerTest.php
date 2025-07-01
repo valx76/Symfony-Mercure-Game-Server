@@ -7,12 +7,13 @@ use App\Game\Domain\Model\Entity\Level\Level2;
 use App\Game\Domain\Model\Entity\Player;
 use App\Game\Domain\Model\Entity\World;
 use App\Game\Domain\Service\LevelNormalizer;
+use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\SharedContext\Domain\Model\ValueObject\Vector;
 use PHPUnit\Framework\TestCase;
 
 class LevelNormalizerTest extends TestCase
 {
-    private LevelNormalizer $levelNormalizer;
+    private LevelNormalizerInterface $levelNormalizer;
 
     protected function setUp(): void
     {

@@ -12,7 +12,7 @@ enum TileTypeEnum: int
         return match ($this) {
             self::EMPTY => false,
             self::WALL => true,
-            default => throw new \ValueError('Unknown tile type'),
+            // default => throw new \ValueError('Unknown tile type'),
         };
     }
 }

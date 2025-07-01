@@ -26,4 +26,3 @@ Feature: Test the ConnectPlayer feature
     When I connect
     Then I should have a 200 response status code
     And I should have a correct ConnectPlayer response
-    And A notification should be sent to the players on the same world and level

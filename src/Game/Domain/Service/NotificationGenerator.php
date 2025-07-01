@@ -11,7 +11,7 @@ use App\SharedContext\Domain\Model\MercureTopics;
 final readonly class NotificationGenerator
 {
     public function __construct(
-        private LevelNormalizer $levelNormalizer,
+        private LevelNormalizerInterface $levelNormalizer,
         private MercurePublisherInterface $publisher,
     ) {
     }

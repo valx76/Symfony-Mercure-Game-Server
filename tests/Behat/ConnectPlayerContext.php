@@ -49,13 +49,21 @@ final class ConnectPlayerContext extends BaseControllerContext
         /** @var string $response */
         $response = $this->webContext->response->getContent();
 
-        /** @var array<string, mixed|array<string, mixed> $result */
         $result = json_decode($response, true);
 
+        /* @phpstan-ignore-next-line */
         Assert::assertArrayHasKey('playerId', $result);
+
+        /* @phpstan-ignore-next-line */
         Assert::assertCount(1, $result['levelData']['players']);
+
+        /* @phpstan-ignore-next-line */
         Assert::assertSame($result['playerId'], $result['levelData']['players'][0]['id']);
+
+        /* @phpstan-ignore-next-line */
         Assert::assertSame($this->worldContext->world->id, $result['worldId']);
+
+        /* @phpstan-ignore-next-line */
         Assert::assertSame($this->playerContext->defaultLevelName, $result['levelData']['level_name']);
     }
 }
