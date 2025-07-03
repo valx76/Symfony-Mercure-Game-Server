@@ -32,4 +32,30 @@ class NotificationGeneratorTest extends TestCase
         $notificationGenerator = new NotificationGenerator($levelNormalizer, $mercurePublisher);
         $notificationGenerator->generateLevelData($world, $level);
     }
+
+    public function testGeneratesExceptionData(): void
+    {
+        $playerId = 'testPlayer';
+        $exceptionClass = 'testException';
+        $message = 'testMessage';
+
+        $data = json_encode([
+            'MESSAGE' => $message,
+            'EXCEPTION' => $exceptionClass,
+        ], JSON_THROW_ON_ERROR);
+
+        $levelNormalizer = $this->createMock(LevelNormalizerInterface::class);
+
+        $mercurePublisher = $this->createMock(MercurePublisherInterface::class);
+        $mercurePublisher
+            ->expects($this->once())
+            ->method('publish')
+            ->with(
+                sprintf(MercureTopics::PLAYER, $playerId),
+                $data,
+            );
+
+        $notificationGenerator = new NotificationGenerator($levelNormalizer, $mercurePublisher);
+        $notificationGenerator->generateExceptionData($playerId, $exceptionClass, $message);
+    }
 }
