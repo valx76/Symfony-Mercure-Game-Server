@@ -8,6 +8,7 @@ default:
                 - App\Tests\Behat\WebContext
                 - App\Tests\Behat\WorldContext
                 - App\Tests\Behat\ConnectPlayerContext
+                - App\Tests\Behat\DisconnectPlayerContext
                 - App\Tests\Behat\MovePlayerContext
 
     extensions:

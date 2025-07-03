@@ -18,7 +18,6 @@ class PlayerRepositoryTest extends KernelTestCase
 {
     use RedisHelperTrait;
 
-
     private RedisDatabase $redisDatabase;
     private PlayerRepositoryInterface $playerRepository;
 
@@ -90,5 +89,24 @@ class PlayerRepositoryTest extends KernelTestCase
 
         $this->expectException(EntityHasMissingDataException::class);
         $this->playerRepository->find($player->id);
+    }
+
+    public function testDeletePlayer(): void
+    {
+        $player1 = new Player('playerId1', 'playerName1', new Vector(0, 1), 'worldId', 'levelName');
+        $player2 = new Player('playerId2', 'playerName2', new Vector(0, 1), 'worldId', 'levelName');
+
+        $this->playerRepository->save($player1);
+        $this->playerRepository->save($player2);
+
+        $this->playerRepository->find($player1->id);
+        $this->playerRepository->find($player2->id);
+
+        $this->playerRepository->delete($player2);
+
+        $this->playerRepository->find($player1->id);
+
+        $this->expectException(PlayerNotFoundException::class);
+        $this->playerRepository->find($player2->id);
     }
 }

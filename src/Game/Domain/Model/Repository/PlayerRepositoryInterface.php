@@ -17,4 +17,9 @@ interface PlayerRepositoryInterface
      * @throws EntityHasIncorrectDataException
      */
     public function find(string $id): Player;
+
+    /**
+     * @throws PlayerNotFoundException
+     */
+    public function delete(Player $player): void;
 }

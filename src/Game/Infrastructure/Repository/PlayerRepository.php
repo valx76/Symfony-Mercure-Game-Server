@@ -53,11 +53,6 @@ final readonly class PlayerRepository implements PlayerRepositoryInterface
         }
     }
 
-    /**
-     * @throws PlayerNotFoundException
-     * @throws EntityHasMissingDataException
-     * @throws EntityHasIncorrectDataException
-     */
     public function find(string $id): Player
     {
         $key = sprintf(DatabaseKeys::PLAYER_KEY, $id);
@@ -97,6 +92,17 @@ final readonly class PlayerRepository implements PlayerRepositoryInterface
             throw EntityHasMissingDataException::fromField(Player::class, $e->name);
         } catch (InvalidVectorDataException|VectorNegativeValueException) {
             throw new EntityHasIncorrectDataException();
+        }
+    }
+
+    public function delete(Player $player): void
+    {
+        try {
+            $this->database->deleteKey(
+                sprintf(DatabaseKeys::PLAYER_KEY, $player->id)
+            );
+        } catch (DatabaseKeyNotFoundException) {
+            throw new PlayerNotFoundException();
         }
     }
 }
