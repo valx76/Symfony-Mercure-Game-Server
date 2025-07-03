@@ -2,9 +2,9 @@
 
 namespace App\Game\Application\UseCase\MovePlayer;
 
-use App\SharedContext\Application\Bus\AsyncMessageInterface;
+use App\SharedContext\Application\Bus\AsyncPlayerMessageInterface;
 
-final readonly class MovePlayerAsyncMessage implements AsyncMessageInterface
+final readonly class MovePlayerAsyncMessage implements AsyncPlayerMessageInterface
 {
     public function __construct(
         public private(set) string $playerId,

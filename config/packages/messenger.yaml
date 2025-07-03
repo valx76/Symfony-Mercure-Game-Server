@@ -10,7 +10,7 @@ framework:
       # failed: 'doctrine://default?queue_name=failed'
 
     routing:
-      App\SharedContext\Application\Bus\AsyncMessageInterface: async
+      App\SharedContext\Application\Bus\AsyncPlayerMessageInterface: async
       App\SharedContext\Application\Bus\SyncMessageInterface: sync
 
 when@test:

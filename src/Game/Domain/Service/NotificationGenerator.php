@@ -32,4 +32,24 @@ final readonly class NotificationGenerator
             throw new NotificationException();
         }
     }
+
+    /**
+     * @throws NotificationException
+     */
+    public function generateExceptionData(string $playerId, string $exceptionClass, string $message): void
+    {
+        try {
+            $data = json_encode([
+                'MESSAGE' => $message,
+                'EXCEPTION' => $exceptionClass,
+            ], JSON_THROW_ON_ERROR);
+
+            $this->publisher->publish(
+                sprintf(MercureTopics::PLAYER, $playerId),
+                $data
+            );
+        } catch (\Throwable) {
+            throw new NotificationException();
+        }
+    }
 }
