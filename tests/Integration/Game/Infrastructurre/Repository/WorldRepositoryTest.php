@@ -16,11 +16,11 @@ use App\SharedContext\Domain\Model\ValueObject\Vector;
 use App\SharedContext\Infrastructure\Database\RedisDatabase;
 use App\Tests\_Helper\RedisHelperTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Clock\Clock;
 
 final class WorldRepositoryTest extends KernelTestCase
 {
     use RedisHelperTrait;
-
 
     private RedisDatabase $redisDatabase;
     private PlayerRepositoryInterface $playerRepository;
@@ -36,7 +36,7 @@ final class WorldRepositoryTest extends KernelTestCase
         $redisDatabase = $container->get(RedisDatabase::class);
         $this->redisDatabase = $redisDatabase;
 
-        $this->playerRepository = new PlayerRepository($this->redisDatabase);
+        $this->playerRepository = new PlayerRepository($this->redisDatabase, new Clock());
         $this->worldRepository = new WorldRepository($this->redisDatabase, $this->playerRepository);
     }
 
@@ -47,8 +47,8 @@ final class WorldRepositoryTest extends KernelTestCase
 
     public function testSaveAndFind(): void
     {
-        $player1 = new Player('playerId1', 'playerName1', new Vector(0, 1), 'worldId');
-        $player2 = new Player('playerId2', 'playerName2', new Vector(2, 3), 'worldId');
+        $player1 = new Player('playerId1', 'playerName1', new Vector(0, 1), new \DateTimeImmutable(), 'worldId');
+        $player2 = new Player('playerId2', 'playerName2', new Vector(2, 3), new \DateTimeImmutable(), 'worldId');
         $world = new World('worldId', 'worldName', [$player1, $player2]);
 
         $this->playerRepository->save($player1);
@@ -76,7 +76,7 @@ final class WorldRepositoryTest extends KernelTestCase
 
     public function testFailureWhenWorldHasNonExistingPlayer(): void
     {
-        $player = new Player('playerId', 'playerName', new Vector(2, 3), 'worldId');
+        $player = new Player('playerId', 'playerName', new Vector(2, 3), new \DateTimeImmutable(), 'worldId');
         $world = new World('worldId', 'worldName', [$player]);
 
         // INFO - Not saving the player into Redis

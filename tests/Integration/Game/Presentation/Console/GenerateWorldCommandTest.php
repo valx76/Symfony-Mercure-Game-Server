@@ -10,12 +10,12 @@ use App\SharedContext\Infrastructure\Database\RedisDatabase;
 use App\Tests\_Helper\RedisHelperTrait;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Clock\Clock;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class GenerateWorldCommandTest extends KernelTestCase
 {
     use RedisHelperTrait;
-
 
     private RedisDatabase $redisDatabase;
     private PlayerRepositoryInterface $playerRepository;
@@ -28,14 +28,14 @@ class GenerateWorldCommandTest extends KernelTestCase
 
         $container = self::getContainer();
 
-        /** @phpstan-ignore argument.type */
+        /* @phpstan-ignore argument.type */
         $this->application = new Application(self::$kernel);
 
         /** @var RedisDatabase $redisDatabase */
         $redisDatabase = $container->get(RedisDatabase::class);
         $this->redisDatabase = $redisDatabase;
 
-        $this->playerRepository = new PlayerRepository($this->redisDatabase);
+        $this->playerRepository = new PlayerRepository($this->redisDatabase, new Clock());
         $this->worldRepository = new WorldRepository($this->redisDatabase, $this->playerRepository);
     }
 

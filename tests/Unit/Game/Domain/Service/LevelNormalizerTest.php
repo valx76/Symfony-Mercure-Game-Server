@@ -42,9 +42,9 @@ class LevelNormalizerTest extends TestCase
         $level = new Level2();
 
         $world = new World('worldId', 'worldName', [
-            new Player('id1', 'name1', new Vector(1, 1), 'worldId', Level2::class),
-            new Player('id2', 'name2', new Vector(2, 2), 'worldId', Level2::class),
-            new Player('id3', 'name3', new Vector(7, 4), 'worldId', Level2::class),
+            new Player('id1', 'name1', new Vector(1, 1), new \DateTimeImmutable(), 'worldId', Level2::class),
+            new Player('id2', 'name2', new Vector(2, 2), new \DateTimeImmutable(), 'worldId', Level2::class),
+            new Player('id3', 'name3', new Vector(7, 4), new \DateTimeImmutable(), 'worldId', Level2::class),
         ]);
 
         $this->assertSame([

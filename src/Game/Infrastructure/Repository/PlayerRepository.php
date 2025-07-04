@@ -14,11 +14,13 @@ use App\SharedContext\Domain\Exception\InvalidVectorDataException;
 use App\SharedContext\Domain\Exception\VectorNegativeValueException;
 use App\SharedContext\Domain\Model\DatabaseKeys;
 use App\SharedContext\Domain\Model\ValueObject\Vector;
+use Psr\Clock\ClockInterface;
 
 final readonly class PlayerRepository implements PlayerRepositoryInterface
 {
     public function __construct(
         private DatabaseInterface $database,
+        private ClockInterface $clock,
     ) {
     }
 
@@ -34,6 +36,12 @@ final readonly class PlayerRepository implements PlayerRepositoryInterface
             sprintf(DatabaseKeys::PLAYER_KEY, $player->id),
             DatabaseKeys::PLAYER_POSITION,
             (string) $player->position
+        );
+
+        $this->database->setHashValue(
+            sprintf(DatabaseKeys::PLAYER_KEY, $player->id),
+            DatabaseKeys::PLAYER_LAST_ACTIVITY_TIME,
+            $player->lastActivityTime->format('Y-m-d H:i:s')
         );
 
         if (null !== $player->worldId) {
@@ -73,6 +81,13 @@ final readonly class PlayerRepository implements PlayerRepositoryInterface
             );
             $position = Vector::fromString($positionStr);
 
+            $lastActivityTimeStr = $this->database->getHashValue(
+                $key,
+                DatabaseKeys::PLAYER_LAST_ACTIVITY_TIME
+            );
+            $lastActivityTime = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $lastActivityTimeStr);
+            $lastActivityTime = (false !== $lastActivityTime) ? $lastActivityTime : $this->clock->now();
+
             if ($this->database->hasHashField($key, DatabaseKeys::PLAYER_WORLD)) {
                 $worldId = $this->database->getHashValue(
                     $key,
@@ -87,12 +102,32 @@ final readonly class PlayerRepository implements PlayerRepositoryInterface
                 );
             }
 
-            return new Player($id, $name, $position, $worldId ?? null, $levelName ?? null);
+            return new Player($id, $name, $position, $lastActivityTime, $worldId ?? null, $levelName ?? null);
         } catch (DatabaseFieldNotFoundException|DatabaseKeyNotFoundException $e) {
             throw EntityHasMissingDataException::fromField(Player::class, $e->name);
         } catch (InvalidVectorDataException|VectorNegativeValueException) {
             throw new EntityHasIncorrectDataException();
         }
+    }
+
+    public function findAll(): array
+    {
+        $playerIds = $this->database->findKeysByPattern(
+            str_replace('%s', '*', DatabaseKeys::PLAYER_KEY)
+        );
+
+        $players = [];
+        foreach ($playerIds as $playerIdStr) {
+            $playerIdFormat = str_replace('%s', '', DatabaseKeys::PLAYER_KEY);
+            $playerId = substr(
+                $playerIdStr,
+                strpos($playerIdStr, $playerIdFormat) + strlen($playerIdFormat)
+            );
+
+            $players[] = $this->find($playerId);
+        }
+
+        return $players;
     }
 
     public function delete(Player $player): void

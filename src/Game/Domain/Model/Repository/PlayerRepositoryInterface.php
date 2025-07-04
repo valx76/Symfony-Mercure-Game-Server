@@ -19,6 +19,15 @@ interface PlayerRepositoryInterface
     public function find(string $id): Player;
 
     /**
+     * @return Player[]
+     *
+     * @throws EntityHasMissingDataException
+     * @throws EntityHasIncorrectDataException
+     * @throws PlayerNotFoundException
+     */
+    public function findAll(): array;
+
+    /**
      * @throws PlayerNotFoundException
      */
     public function delete(Player $player): void;

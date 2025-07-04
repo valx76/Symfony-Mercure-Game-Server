@@ -13,6 +13,7 @@ use App\SharedContext\Domain\Model\ValueObject\Vector;
 use App\SharedContext\Infrastructure\Database\RedisDatabase;
 use App\Tests\_Helper\RedisHelperTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Clock\Clock;
 
 class PlayerRepositoryTest extends KernelTestCase
 {
@@ -31,7 +32,7 @@ class PlayerRepositoryTest extends KernelTestCase
         $redisDatabase = $container->get(RedisDatabase::class);
         $this->redisDatabase = $redisDatabase;
 
-        $this->playerRepository = new PlayerRepository($this->redisDatabase);
+        $this->playerRepository = new PlayerRepository($this->redisDatabase, new Clock());
     }
 
     protected function tearDown(): void
@@ -41,7 +42,7 @@ class PlayerRepositoryTest extends KernelTestCase
 
     public function testSaveAndFind(): void
     {
-        $player = new Player('playerId1', 'playerName1', new Vector(0, 1), 'worldId', 'levelName');
+        $player = new Player('playerId1', 'playerName1', new Vector(0, 1), new \DateTimeImmutable(), 'worldId', 'levelName');
 
         $this->playerRepository->save($player);
 
@@ -54,6 +55,24 @@ class PlayerRepositoryTest extends KernelTestCase
         $this->assertSame($player->levelName, $retrievedPlayer->levelName);
     }
 
+    public function testFindAll(): void
+    {
+        $player1 = new Player('playerId1', 'playerName1', new Vector(0, 1), new \DateTimeImmutable(), 'worldId1', 'levelName');
+        $player2 = new Player('playerId2', 'playerName2', new Vector(0, 1), new \DateTimeImmutable(), 'worldId1', 'levelName');
+        $player3 = new Player('playerId3', 'playerName3', new Vector(0, 1), new \DateTimeImmutable(), 'worldId2', 'levelName');
+
+        $this->playerRepository->save($player1);
+        $this->playerRepository->save($player2);
+        $this->playerRepository->save($player3);
+
+        $players = $this->playerRepository->findAll();
+
+        $this->assertCount(3, $players);
+        $this->assertSame($player1->id, $players[0]->id);
+        $this->assertSame($player2->id, $players[1]->id);
+        $this->assertSame($player3->id, $players[2]->id);
+    }
+
     public function testFailureWhenSearchingForANonExistingPlayer(): void
     {
         $this->expectException(PlayerNotFoundException::class);
@@ -62,7 +81,7 @@ class PlayerRepositoryTest extends KernelTestCase
 
     public function testFailureWhenSearchingForPlayerThatHasIncorrectData(): void
     {
-        $player = new Player('playerId1', 'playerName1', new Vector(0, 1), 'worldId', 'levelName');
+        $player = new Player('playerId1', 'playerName1', new Vector(0, 1), new \DateTimeImmutable(), 'worldId', 'levelName');
 
         $this->playerRepository->save($player);
 
@@ -78,7 +97,7 @@ class PlayerRepositoryTest extends KernelTestCase
 
     public function testFailureWhenSearchingForPlayerThatHasIncompleteData(): void
     {
-        $player = new Player('playerId', 'playerName', new Vector(0, 1), 'worldId', 'levelName');
+        $player = new Player('playerId', 'playerName', new Vector(0, 1), new \DateTimeImmutable(), 'worldId', 'levelName');
 
         $this->playerRepository->save($player);
 
@@ -93,8 +112,8 @@ class PlayerRepositoryTest extends KernelTestCase
 
     public function testDeletePlayer(): void
     {
-        $player1 = new Player('playerId1', 'playerName1', new Vector(0, 1), 'worldId', 'levelName');
-        $player2 = new Player('playerId2', 'playerName2', new Vector(0, 1), 'worldId', 'levelName');
+        $player1 = new Player('playerId1', 'playerName1', new Vector(0, 1), new \DateTimeImmutable(), 'worldId', 'levelName');
+        $player2 = new Player('playerId2', 'playerName2', new Vector(0, 1), new \DateTimeImmutable(), 'worldId', 'levelName');
 
         $this->playerRepository->save($player1);
         $this->playerRepository->save($player2);

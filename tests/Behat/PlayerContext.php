@@ -59,6 +59,7 @@ final class PlayerContext implements Context
             $this->uuidGenerator->generate(),
             'testPlayer',
             $level->getSpawnPosition(),
+            new \DateTimeImmutable(),
             $this->worldContext->world->id,
             $this->defaultLevelName,
         );
@@ -72,7 +73,8 @@ final class PlayerContext implements Context
         $this->player = new Player(
             $this->uuidGenerator->generate(),
             $playerName ?? 'testPlayer',
-            new Vector(0, 0)
+            new Vector(0, 0),
+            new \DateTimeImmutable()
         );
     }
 }

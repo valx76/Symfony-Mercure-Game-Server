@@ -60,6 +60,6 @@ class AvailableWorldFinderTest extends TestCase
 
     private function createPlayer(string $id): Player
     {
-        return new Player($id, '', new Vector(0, 0));
+        return new Player($id, '', new Vector(0, 0), new \DateTimeImmutable());
     }
 }

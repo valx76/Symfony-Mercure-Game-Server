@@ -10,6 +10,7 @@ final class Player
         public private(set) readonly string $id,
         public private(set) readonly string $name,
         public Vector $position,
+        public \DateTimeImmutable $lastActivityTime,
         public ?string $worldId = null,
         public ?string $levelName = null,
     ) {

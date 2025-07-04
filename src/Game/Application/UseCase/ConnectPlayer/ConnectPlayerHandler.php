@@ -13,6 +13,7 @@ use App\Game\Domain\Service\LevelFactory;
 use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\Game\Domain\Service\NotificationGenerator;
 use App\SharedContext\Application\Bus\MessageHandler;
+use Psr\Clock\ClockInterface;
 
 final readonly class ConnectPlayerHandler implements MessageHandler
 {
@@ -23,6 +24,7 @@ final readonly class ConnectPlayerHandler implements MessageHandler
         private LevelFactory $levelFactory,
         private LevelNormalizerInterface $levelNormalizer,
         private NotificationGenerator $notificationGenerator,
+        private ClockInterface $clock,
         private string $defaultLevelName,
     ) {
     }
@@ -42,6 +44,7 @@ final readonly class ConnectPlayerHandler implements MessageHandler
             $message->playerId,
             $message->playerName,
             $level->getSpawnPosition(),
+            $this->clock->now(),
             $world->id,
             $level::class
         );

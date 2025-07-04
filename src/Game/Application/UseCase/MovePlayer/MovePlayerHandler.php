@@ -20,6 +20,7 @@ use App\SharedContext\Domain\Exception\PositionOutOfAreaException;
 use App\SharedContext\Domain\Exception\VectorNegativeValueException;
 use App\SharedContext\Domain\Model\ValueObject\Vector;
 use App\SharedContext\Domain\Service\VectorUtils;
+use Psr\Clock\ClockInterface;
 
 final readonly class MovePlayerHandler implements MessageHandler
 {
@@ -28,6 +29,7 @@ final readonly class MovePlayerHandler implements MessageHandler
         private WorldRepositoryInterface $worldRepository,
         private LevelFactory $levelFactory,
         private NotificationGenerator $notificationGenerator,
+        private ClockInterface $clock,
     ) {
     }
 
@@ -74,6 +76,7 @@ final readonly class MovePlayerHandler implements MessageHandler
         }
 
         $player->position = $targetPosition;
+        $player->lastActivityTime = $this->clock->now();
         $this->playerRepository->save($player);
 
         $world = $this->worldRepository->find($worldId);
