@@ -8,15 +8,12 @@ use App\Game\Domain\Exception\PlayerNotFoundException;
 use App\Game\Domain\Model\Entity\Player;
 use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use Psr\Clock\ClockInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final readonly class TimeoutPlayerFinder
 {
     public function __construct(
         private PlayerRepositoryInterface $playerRepository,
         private ClockInterface $clock,
-
-        #[Autowire('%env(int:PLAYER_INACTIVITY_TIMEOUT_SECS)%')]
         private int $playerInactivityTimeout,
     ) {
     }

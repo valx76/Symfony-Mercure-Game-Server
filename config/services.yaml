@@ -22,6 +22,10 @@ services:
     arguments:
       $maxPlayersPerWorld: '%env(int:WORLD_MAX_PLAYERS)%'
 
+  App\Game\Domain\Service\TimeoutPlayerFinder:
+    arguments:
+      $playerInactivityTimeout: '%env(int:PLAYER_INACTIVITY_TIMEOUT_SECS)%'
+
   App\Game\Application\UseCase\ConnectPlayer\ConnectPlayerHandler:
     arguments:
       $defaultLevelName: '%env(string:WORLD_DEFAULT_LEVEL)%'
