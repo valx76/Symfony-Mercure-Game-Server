@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration\Game\Infrastructurre\Database;
+namespace App\Tests\Integration\Game\Infrastructure\Database;
 
 use App\SharedContext\Domain\Exception\DatabaseFieldNotFoundException;
 use App\SharedContext\Domain\Exception\DatabaseKeyNotFoundException;
@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class RedisDatabaseTest extends KernelTestCase
 {
     use RedisHelperTrait;
-
 
     private RedisDatabase $redisDatabase;
 

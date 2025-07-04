@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration\Game\Infrastructurre\Repository;
+namespace App\Tests\Integration\Game\Infrastructure\Repository;
 
 use App\Game\Domain\Exception\EntityHasIncorrectDataException;
 use App\Game\Domain\Exception\EntityHasMissingDataException;
