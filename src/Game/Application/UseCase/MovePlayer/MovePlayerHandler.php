@@ -14,7 +14,7 @@ use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\LevelFactory;
 use App\Game\Domain\Service\NotificationGenerator;
-use App\SharedContext\Application\Bus\MessageHandler;
+use App\SharedContext\Application\Bus\MessageHandlerInterface;
 use App\SharedContext\Domain\Exception\PositionCollidingException;
 use App\SharedContext\Domain\Exception\PositionOutOfAreaException;
 use App\SharedContext\Domain\Exception\VectorNegativeValueException;
@@ -22,7 +22,7 @@ use App\SharedContext\Domain\Model\ValueObject\Vector;
 use App\SharedContext\Domain\Service\VectorUtils;
 use Psr\Clock\ClockInterface;
 
-final readonly class MovePlayerHandler implements MessageHandler
+final readonly class MovePlayerHandler implements MessageHandlerInterface
 {
     public function __construct(
         private PlayerRepositoryInterface $playerRepository,

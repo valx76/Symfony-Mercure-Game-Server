@@ -6,7 +6,7 @@ services:
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
   _instanceof:
-    App\SharedContext\Application\Bus\MessageHandler:
+    App\SharedContext\Application\Bus\MessageHandlerInterface:
       tags:
         - { name: messenger.message_handler }
 

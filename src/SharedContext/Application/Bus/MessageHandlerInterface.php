@@ -2,6 +2,6 @@
 
 namespace App\SharedContext\Application\Bus;
 
-interface MessageHandler
+interface MessageHandlerInterface
 {
 }

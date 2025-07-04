@@ -12,10 +12,10 @@ use App\Game\Domain\Service\AvailableWorldFinder;
 use App\Game\Domain\Service\LevelFactory;
 use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\Game\Domain\Service\NotificationGenerator;
-use App\SharedContext\Application\Bus\MessageHandler;
+use App\SharedContext\Application\Bus\MessageHandlerInterface;
 use Psr\Clock\ClockInterface;
 
-final readonly class ConnectPlayerHandler implements MessageHandler
+final readonly class ConnectPlayerHandler implements MessageHandlerInterface
 {
     public function __construct(
         private PlayerRepositoryInterface $playerRepository,
