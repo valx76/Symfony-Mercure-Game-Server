@@ -29,11 +29,8 @@ Start the RabbitMQ consumer:<br>
 PHP-CS-FIXER:<br>
 `make php-cs-fixer`
 
-PHPSTAN (level 10):<br>
+PHPSTAN / PHPAT (level 10):<br>
 `make phpstan`
-
-DEPTRAC (not working since it doesn't handle PHP 8.4 yet):<br>
-`make deptrac`
 
 PHPUNIT:<br>
 `make test`

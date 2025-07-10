@@ -2,6 +2,7 @@
 
 namespace App\Game\Application\UseCase\ConnectPlayer;
 
+use App\Game\Application\Service\NotificationGenerator;
 use App\Game\Domain\Exception\LevelNotFoundException;
 use App\Game\Domain\Exception\NotificationException;
 use App\Game\Domain\Exception\NoWorldAvailableException;
@@ -11,7 +12,6 @@ use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\AvailableWorldFinder;
 use App\Game\Domain\Service\LevelFactory;
 use App\Game\Domain\Service\LevelNormalizerInterface;
-use App\Game\Domain\Service\NotificationGenerator;
 use App\SharedContext\Application\Bus\MessageHandlerInterface;
 use Psr\Clock\ClockInterface;
 

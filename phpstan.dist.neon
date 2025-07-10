@@ -8,3 +8,12 @@ parameters:
         - tests/
     excludePaths:
         - tests/bootstrap.php
+    phpat:
+        ignore_built_in_classes: true
+        show_rule_names: true
+
+services:
+    -
+        class: App\Tests\Architecture\LayerTest
+        tags:
+            - phpat.test

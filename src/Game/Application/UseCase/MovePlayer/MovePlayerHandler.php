@@ -2,6 +2,7 @@
 
 namespace App\Game\Application\UseCase\MovePlayer;
 
+use App\Game\Application\Service\NotificationGenerator;
 use App\Game\Domain\Exception\EntityHasIncorrectDataException;
 use App\Game\Domain\Exception\EntityHasMissingDataException;
 use App\Game\Domain\Exception\LevelNotFoundException;
@@ -13,7 +14,6 @@ use App\Game\Domain\Exception\WorldNotFoundException;
 use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\LevelFactory;
-use App\Game\Domain\Service\NotificationGenerator;
 use App\SharedContext\Application\Bus\MessageHandlerInterface;
 use App\SharedContext\Domain\Exception\PositionCollidingException;
 use App\SharedContext\Domain\Exception\PositionOutOfAreaException;

@@ -2,10 +2,10 @@
 
 namespace App\Tests\Unit\Game\Domain\Service;
 
+use App\Game\Application\Service\NotificationGenerator;
 use App\Game\Domain\Model\Entity\Level\Level1;
 use App\Game\Domain\Model\Entity\World;
 use App\Game\Domain\Service\LevelNormalizerInterface;
-use App\Game\Domain\Service\NotificationGenerator;
 use App\SharedContext\Application\Mercure\MercurePublisherInterface;
 use App\SharedContext\Domain\Model\MercureTopics;
 use PHPUnit\Framework\TestCase;

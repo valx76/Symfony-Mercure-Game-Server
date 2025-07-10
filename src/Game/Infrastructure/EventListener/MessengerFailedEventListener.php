@@ -2,8 +2,8 @@
 
 namespace App\Game\Infrastructure\EventListener;
 
+use App\Game\Application\Service\NotificationGenerator;
 use App\Game\Domain\Exception\NotificationException;
-use App\Game\Domain\Service\NotificationGenerator;
 use App\SharedContext\Application\Bus\AsyncPlayerMessageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
