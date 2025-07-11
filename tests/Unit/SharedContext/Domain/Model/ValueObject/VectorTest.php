@@ -41,4 +41,16 @@ class VectorTest extends TestCase
         $vector = new Vector(1, 2);
         $this->assertSame('1,2', (string) $vector);
     }
+
+    public function testEquals(): void
+    {
+        $v1 = new Vector(1, 2);
+        $v2 = new Vector(1, 2);
+        $v3 = new Vector(1, 3);
+
+        $this->assertTrue($v1->equals($v2));
+        $this->assertTrue($v2->equals($v1));
+        $this->assertFalse($v1->equals($v3));
+        $this->assertFalse($v3->equals($v1));
+    }
 }

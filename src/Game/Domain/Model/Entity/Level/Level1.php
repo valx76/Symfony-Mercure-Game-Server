@@ -36,4 +36,14 @@ final readonly class Level1 implements LevelInterface
     {
         return new Vector(1, 2);
     }
+
+    /**
+     * @throws VectorNegativeValueException
+     */
+    public function getTeleportPositions(): array
+    {
+        return [
+            new TeleportPosition(new Vector(2, 3), Level2::class, new Vector(5, 2)),
+        ];
+    }
 }

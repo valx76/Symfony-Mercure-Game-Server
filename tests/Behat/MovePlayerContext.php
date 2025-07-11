@@ -41,6 +41,8 @@ final class MovePlayerContext extends BaseControllerContext
             'targetX' => $vector->x,
             'targetY' => $vector->y,
         ]);
+
+        $this->playerContext->refreshPlayer();
     }
 
     #[Then('/^I should have a correct MovePlayer response$/')]

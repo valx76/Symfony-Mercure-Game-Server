@@ -27,3 +27,12 @@ Feature: Test the MovePlayer feature
     When I move to position "3,3"
     Then I should have a 200 response status code
     And I should have a correct MovePlayer response
+    And I should be on level "App\Game\Domain\Model\Entity\Level\Level1"
+
+  Scenario: Teleport
+    Given An available world exists
+    And I have a player id that exists
+    When I move to position "2,3"
+    Then I should have a 200 response status code
+    And I should have a correct MovePlayer response
+    And I should be on level "App\Game\Domain\Model\Entity\Level\Level2"

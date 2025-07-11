@@ -40,7 +40,7 @@ final class PlayerContext implements Context
         $environment = $scope->getEnvironment();
 
         /** @var WorldContext $worldContext */
-        $worldContext = $environment->getContext(WorldContext::class);;
+        $worldContext = $environment->getContext(WorldContext::class);
         $this->worldContext = $worldContext;
     }
 
@@ -76,5 +76,13 @@ final class PlayerContext implements Context
             new Vector(0, 0),
             new \DateTimeImmutable()
         );
+    }
+
+    public function refreshPlayer(): void
+    {
+        try {
+            $this->player = $this->playerRepository->find($this->player->id);
+        } catch (\Throwable) {
+        }
     }
 }

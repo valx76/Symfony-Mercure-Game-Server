@@ -11,6 +11,7 @@ use App\Game\Domain\Exception\PlayerNotFoundException;
 use App\Game\Domain\Exception\PlayerNotInLevelException;
 use App\Game\Domain\Exception\PlayerNotInWorldException;
 use App\Game\Domain\Exception\WorldNotFoundException;
+use App\Game\Domain\Model\Entity\Level\TeleportPosition;
 use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\LevelFactory;
@@ -48,6 +49,8 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
      */
     public function __invoke(MovePlayerAsyncMessage $message): void
     {
+        // TODO - Refactor this method
+
         $player = $this->playerRepository->find($message->playerId);
 
         /** @var ?string $levelName */
@@ -75,11 +78,33 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
             throw new PositionCollidingException();
         }
 
-        $player->position = $targetPosition;
+        $targetLevel = $level;
+        $targetLevelName = $levelName;
+
+        /** @var ?TeleportPosition $teleportPosition */
+        $teleportPosition = array_find(
+            $level->getTeleportPositions(),
+            fn (TeleportPosition $position) => $position->currentLevelPosition->equals($targetPosition)
+        );
+
+        if (null !== $teleportPosition) {
+            $targetLevelName = $teleportPosition->targetLevelName;
+            $targetLevel = $this->levelFactory->create($targetLevelName);
+
+            $player->levelName = $teleportPosition->targetLevelName;
+            $player->position = $teleportPosition->targetLevelPosition;
+        } else {
+            $player->position = $targetPosition;
+        }
+
         $player->lastActivityTime = $this->clock->now();
         $this->playerRepository->save($player);
 
         $world = $this->worldRepository->find($worldId);
+
+        if ($targetLevelName !== $levelName) {
+            $this->notificationGenerator->generateLevelData($world, $targetLevel);
+        }
 
         $this->notificationGenerator->generateLevelData($world, $level);
     }

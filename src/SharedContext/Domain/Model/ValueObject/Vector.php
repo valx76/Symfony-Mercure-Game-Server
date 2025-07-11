@@ -38,4 +38,9 @@ final readonly class Vector implements \Stringable
     {
         return $this->x.','.$this->y;
     }
+
+    public function equals(Vector $vector): bool
+    {
+        return $this->x === $vector->x && $this->y === $vector->y;
+    }
 }

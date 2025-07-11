@@ -14,4 +14,7 @@ interface LevelInterface
     public function getSize(): Vector;
 
     public function getSpawnPosition(): Vector;
+
+    /** @return TeleportPosition[] */
+    public function getTeleportPositions(): array;
 }
