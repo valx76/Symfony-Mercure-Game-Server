@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Game\Domain\Service;
+namespace App\Tests\Unit\Game\Application\Service;
 
 use App\Game\Application\Service\NotificationGenerator;
 use App\Game\Domain\Model\Entity\Level\Level1;
