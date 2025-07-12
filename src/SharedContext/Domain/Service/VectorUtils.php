@@ -25,7 +25,7 @@ class VectorUtils
         }
 
         if ($position->x >= $size->x || $position->y >= $size->y) {
-            throw new PositionOutOfAreaException();
+            throw new PositionOutOfAreaException('Incorrect position!');
         }
 
         $tileValue = $tiles[$position->y * $size->x + $position->x];

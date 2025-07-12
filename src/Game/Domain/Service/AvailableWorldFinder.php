@@ -29,6 +29,6 @@ final readonly class AvailableWorldFinder
             return $world;
         }
 
-        throw new NoWorldAvailableException();
+        throw new NoWorldAvailableException('No world available!');
     }
 }

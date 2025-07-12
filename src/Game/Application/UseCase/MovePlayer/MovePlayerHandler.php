@@ -60,22 +60,22 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
         $worldId = $player->worldId;
 
         if (null === $levelName) {
-            throw new PlayerNotInLevelException();
+            throw new PlayerNotInLevelException('Player not in a level!');
         }
 
         if (null === $worldId) {
-            throw new PlayerNotInWorldException();
+            throw new PlayerNotInWorldException('Player not in a world!');
         }
 
         $level = $this->levelFactory->create($levelName);
         $targetPosition = new Vector($message->targetX, $message->targetY);
 
         if (!VectorUtils::isVectorInVector($targetPosition, $level->getSize())) {
-            throw new PositionOutOfAreaException();
+            throw new PositionOutOfAreaException('Incorrect position!');
         }
 
         if (VectorUtils::isPositionColliding($targetPosition, $level->getSize(), $level->getTiles())) {
-            throw new PositionCollidingException();
+            throw new PositionCollidingException('Cannot move to this position!');
         }
 
         $targetLevel = $level;

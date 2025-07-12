@@ -17,7 +17,7 @@ final readonly class LevelFactory
         return match ($levelName) {
             Level1::class => new Level1(),
             Level2::class => new Level2(),
-            default => throw new LevelNotFoundException(),
+            default => throw new LevelNotFoundException('Level not found!'),
         };
     }
 }

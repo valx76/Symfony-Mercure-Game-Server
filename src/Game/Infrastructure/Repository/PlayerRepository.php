@@ -66,7 +66,7 @@ final readonly class PlayerRepository implements PlayerRepositoryInterface
         $key = sprintf(DatabaseKeys::PLAYER_KEY, $id);
 
         if (!$this->database->hasKey($key)) {
-            throw new PlayerNotFoundException();
+            throw new PlayerNotFoundException('Player not found!');
         }
 
         try {

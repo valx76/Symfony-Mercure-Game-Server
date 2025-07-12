@@ -30,7 +30,7 @@ final readonly class NotificationGenerator
                 $data
             );
         } catch (\Throwable) {
-            throw new NotificationException();
+            throw new NotificationException('Failed to generate level data!');
         }
     }
 
@@ -50,7 +50,7 @@ final readonly class NotificationGenerator
                 $data
             );
         } catch (\Throwable) {
-            throw new NotificationException();
+            throw new NotificationException('Failed to generate exception data!');
         }
     }
 }

@@ -47,7 +47,7 @@ final readonly class WorldRepository implements WorldRepositoryInterface
         $key = sprintf(DatabaseKeys::WORLD_KEY, $id);
 
         if (!$this->database->hasKey($key)) {
-            throw new WorldNotFoundException();
+            throw new WorldNotFoundException('World not found!');
         }
 
         try {
