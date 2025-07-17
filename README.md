@@ -22,7 +22,10 @@ Start local server:<br>
 `symfony server:start --no-tls`
 
 Start the RabbitMQ consumer:<br>
-`symfony console messenger:consume`
+`symfony console messenger:consume async`
+
+Start the scheduler (auto disconnect idle players):<br>
+`symfony console messenger:consume scheduler_default`
 
 ## Tools
 
