@@ -53,4 +53,24 @@ final readonly class NotificationGenerator
             throw new NotificationException('Failed to generate exception data!');
         }
     }
+
+    /**
+     * @throws NotificationException
+     */
+    public function generateMessageData(World $world, LevelInterface $level, string $playerId, string $message): void
+    {
+        try {
+            $data = json_encode([
+                'PLAYER' => $playerId,
+                'MESSAGE' => $message,
+            ], JSON_THROW_ON_ERROR);
+
+            $this->publisher->publish(
+                sprintf(MercureTopics::MESSAGE, $world->id, $level::class),
+                $data
+            );
+        } catch (\Throwable) {
+            throw new NotificationException('Failed to generate message data!');
+        }
+    }
 }

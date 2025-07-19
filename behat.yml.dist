@@ -11,6 +11,7 @@ default:
                 - App\Tests\Behat\ConnectPlayerContext
                 - App\Tests\Behat\DisconnectPlayerContext
                 - App\Tests\Behat\MovePlayerContext
+                - App\Tests\Behat\SendMessageContext
 
     extensions:
         FriendsOfBehat\SymfonyExtension:
