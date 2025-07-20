@@ -7,6 +7,7 @@ use App\SharedContext\Application\Bus\MessageBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/disconnect', name: 'disconnect_player', methods: ['POST'])]
@@ -14,13 +15,15 @@ final class DisconnectPlayerController extends AbstractController
 {
     public function __construct(
         private readonly MessageBusInterface $bus,
+        private readonly ObjectMapperInterface $mapper,
     ) {
     }
 
     public function __invoke(
         #[MapRequestPayload] DisconnectPlayerDTO $dto,
     ): JsonResponse {
-        $this->bus->execute(new DisconnectPlayerAsyncMessage($dto->playerId));
+        $message = $this->mapper->map($dto, DisconnectPlayerAsyncMessage::class);
+        $this->bus->execute($message);
 
         return $this->json([]);
     }
