@@ -128,4 +128,24 @@ class PlayerRepositoryTest extends KernelTestCase
         $this->expectException(PlayerNotFoundException::class);
         $this->playerRepository->find($player2->id);
     }
+
+    public function testPlayerExists(): void
+    {
+        $this->assertFalse(
+            $this->playerRepository->exists('non-existing-player-id')
+        );
+
+        $player = new Player('playerId1', 'playerName1', new Vector(0, 1), new \DateTimeImmutable(), 'worldId', 'levelName');
+
+        $this->playerRepository->save($player);
+        $this->assertTrue(
+            $this->playerRepository->exists($player->id)
+        );
+
+        $this->playerRepository->delete($player);
+
+        $this->assertFalse(
+            $this->playerRepository->exists($player->id)
+        );
+    }
 }

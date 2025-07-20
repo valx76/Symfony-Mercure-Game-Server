@@ -63,11 +63,11 @@ final readonly class PlayerRepository implements PlayerRepositoryInterface
 
     public function find(string $id): Player
     {
-        $key = sprintf(DatabaseKeys::PLAYER_KEY, $id);
-
-        if (!$this->database->hasKey($key)) {
+        if (!$this->exists($id)) {
             throw new PlayerNotFoundException('Player not found!');
         }
+
+        $key = sprintf(DatabaseKeys::PLAYER_KEY, $id);
 
         try {
             $name = $this->database->getHashValue(
@@ -139,5 +139,12 @@ final readonly class PlayerRepository implements PlayerRepositoryInterface
         } catch (DatabaseKeyNotFoundException) {
             throw new PlayerNotFoundException();
         }
+    }
+
+    public function exists(string $id): bool
+    {
+        $key = sprintf(DatabaseKeys::PLAYER_KEY, $id);
+
+        return $this->database->hasKey($key);
     }
 }

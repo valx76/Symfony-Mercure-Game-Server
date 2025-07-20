@@ -4,8 +4,8 @@ Feature: Test the SendMessage feature
     Given An available world exists
     And I have a player id that does not exist
     When I send the message "Hello"
-    Then I should have a 500 response status code
-    And An exception of type "App\Game\Domain\Exception\PlayerNotFoundException" should be thrown
+    Then I should have a 422 response status code
+    And An exception with violation of type "App\Game\Infrastructure\Validator\PlayerExists" should be thrown
 
   Scenario: Send a message
     Given An available world exists

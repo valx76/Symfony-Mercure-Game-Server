@@ -31,4 +31,6 @@ interface PlayerRepositoryInterface
      * @throws PlayerNotFoundException
      */
     public function delete(Player $player): void;
+
+    public function exists(string $id): bool;
 }

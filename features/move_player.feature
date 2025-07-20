@@ -4,8 +4,8 @@ Feature: Test the MovePlayer feature
     Given An available world exists
     And I have a player id that does not exist
     When I move to position "3,3"
-    Then I should have a 500 response status code
-    And An exception of type "App\Game\Domain\Exception\PlayerNotFoundException" should be thrown
+    Then I should have a 422 response status code
+    And An exception with violation of type "App\Game\Infrastructure\Validator\PlayerExists" should be thrown
 
   Scenario: Move a player outside of the level
     Given An available world exists
