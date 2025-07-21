@@ -11,7 +11,10 @@ use App\Game\Domain\Exception\PlayerNotFoundException;
 use App\Game\Domain\Exception\PlayerNotInLevelException;
 use App\Game\Domain\Exception\PlayerNotInWorldException;
 use App\Game\Domain\Exception\WorldNotFoundException;
+use App\Game\Domain\Model\Entity\Level\LevelInterface;
 use App\Game\Domain\Model\Entity\Level\TeleportPosition;
+use App\Game\Domain\Model\Entity\Player;
+use App\Game\Domain\Model\Entity\World;
 use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\LevelFactory;
@@ -49,37 +52,19 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
      */
     public function __invoke(MovePlayerAsyncMessage $message): void
     {
-        // TODO - Refactor this method
-
         $player = $this->playerRepository->find($message->playerId);
 
-        /** @var ?string $levelName */
-        $levelName = $player->levelName;
-
-        /** @var ?string $worldId */
-        $worldId = $player->worldId;
-
-        if (null === $levelName) {
-            throw new PlayerNotInLevelException('Player not in a level!');
-        }
-
-        if (null === $worldId) {
-            throw new PlayerNotInWorldException('Player not in a world!');
-        }
-
+        /** @var string $levelName */
+        $levelName = $player->levelName ?? throw new PlayerNotInLevelException('Player not in a level!');
         $level = $this->levelFactory->create($levelName);
+
+        /** @var string $worldId */
+        $worldId = $player->worldId ?? throw new PlayerNotInWorldException('Player not in a world!');
+        $world = $this->worldRepository->find($worldId);
+
         $targetPosition = new Vector($message->targetX, $message->targetY);
 
-        if (!VectorUtils::isVectorInVector($targetPosition, $level->getSize())) {
-            throw new PositionOutOfAreaException('Incorrect position!');
-        }
-
-        if (VectorUtils::isPositionColliding($targetPosition, $level->getSize(), $level->getTiles())) {
-            throw new PositionCollidingException('Cannot move to this position!');
-        }
-
-        $targetLevel = $level;
-        $targetLevelName = $levelName;
+        $this->validatePosition($targetPosition, $level);
 
         /** @var ?TeleportPosition $teleportPosition */
         $teleportPosition = array_find(
@@ -88,24 +73,51 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
         );
 
         if (null !== $teleportPosition) {
-            $targetLevelName = $teleportPosition->targetLevelName;
-            $targetLevel = $this->levelFactory->create($targetLevelName);
-
-            $player->levelName = $teleportPosition->targetLevelName;
-            $player->position = $teleportPosition->targetLevelPosition;
+            $this->teleportPlayer($player, $world, $teleportPosition);
         } else {
-            $player->position = $targetPosition;
-        }
-
-        $player->lastActivityTime = $this->clock->now();
-        $this->playerRepository->save($player);
-
-        $world = $this->worldRepository->find($worldId);
-
-        if ($targetLevelName !== $levelName) {
-            $this->notificationGenerator->generateLevelData($world, $targetLevel);
+            $this->updatePlayer($player, $player->levelName, $targetPosition);
         }
 
         $this->notificationGenerator->generateLevelData($world, $level);
+    }
+
+    /**
+     * @throws PositionCollidingException
+     * @throws PositionOutOfAreaException
+     */
+    private function validatePosition(Vector $position, LevelInterface $level): void
+    {
+        if (!VectorUtils::isVectorInVector($position, $level->getSize())) {
+            throw new PositionOutOfAreaException('Incorrect position!');
+        }
+
+        if (VectorUtils::isPositionColliding($position, $level->getSize(), $level->getTiles())) {
+            throw new PositionCollidingException('Cannot move to this position!');
+        }
+    }
+
+    /**
+     * @throws NotificationException
+     * @throws LevelNotFoundException
+     */
+    private function teleportPlayer(Player $player, World $world, TeleportPosition $teleportPosition): void
+    {
+        $targetLevelName = $teleportPosition->targetLevelName;
+
+        if ($targetLevelName !== $player->levelName) {
+            $targetLevel = $this->levelFactory->create($targetLevelName);
+
+            $this->updatePlayer($player, $targetLevelName, $teleportPosition->targetLevelPosition);
+
+            $this->notificationGenerator->generateLevelData($world, $targetLevel);
+        }
+    }
+
+    private function updatePlayer(Player $player, string $targetLevelName, Vector $targetPosition): void
+    {
+        $player->levelName = $targetLevelName;
+        $player->position = $targetPosition;
+        $player->lastActivityTime = $this->clock->now();
+        $this->playerRepository->save($player);
     }
 }
