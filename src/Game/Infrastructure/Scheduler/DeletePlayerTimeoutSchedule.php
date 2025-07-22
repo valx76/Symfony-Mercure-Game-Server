@@ -10,7 +10,7 @@ use App\Game\Domain\Service\TimeoutPlayerFinder;
 use App\SharedContext\Application\Bus\MessageBusInterface;
 use Symfony\Component\Scheduler\Attribute\AsPeriodicTask;
 
-#[AsPeriodicTask(frequency: '10 second')]
+#[AsPeriodicTask(frequency: '%env(int:TASK_DELETE_TIMEOUT_PLAYER_SECS)% second')]
 final readonly class DeletePlayerTimeoutSchedule
 {
     public function __construct(
