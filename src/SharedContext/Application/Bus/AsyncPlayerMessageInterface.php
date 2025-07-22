@@ -2,7 +2,6 @@
 
 namespace App\SharedContext\Application\Bus;
 
-interface AsyncPlayerMessageInterface
+interface AsyncPlayerMessageInterface extends BaseAsyncMessageInterface
 {
-    public string $playerId { get; }
 }

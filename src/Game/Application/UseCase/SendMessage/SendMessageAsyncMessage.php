@@ -2,9 +2,9 @@
 
 namespace App\Game\Application\UseCase\SendMessage;
 
-use App\SharedContext\Application\Bus\AsyncPlayerMessageInterface;
+use App\SharedContext\Application\Bus\AsyncChatMessageInterface;
 
-final readonly class SendMessageAsyncMessage implements AsyncPlayerMessageInterface
+final readonly class SendMessageAsyncMessage implements AsyncChatMessageInterface
 {
     public function __construct(
         public private(set) string $playerId,

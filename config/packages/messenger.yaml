@@ -4,17 +4,20 @@ framework:
     # failure_transport: failed
 
     transports:
-      async: '%env(MESSENGER_TRANSPORT_DSN)%'
+      async_player: '%env(MESSENGER_TRANSPORT_DSN)%/player'
+      async_message: '%env(MESSENGER_TRANSPORT_DSN)%/message'
       sync: 'sync://'
 
       # failed: 'doctrine://default?queue_name=failed'
 
     routing:
-      App\SharedContext\Application\Bus\AsyncPlayerMessageInterface: async
+      App\SharedContext\Application\Bus\AsyncPlayerMessageInterface: async_player
+      App\SharedContext\Application\Bus\AsyncChatMessageInterface: async_message
       App\SharedContext\Application\Bus\SyncMessageInterface: sync
 
 when@test:
   framework:
     messenger:
       transports:
-        async: 'sync://'
+        async_player: 'sync://'
+        async_message: 'sync://'

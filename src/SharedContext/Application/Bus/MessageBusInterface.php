@@ -4,5 +4,5 @@ namespace App\SharedContext\Application\Bus;
 
 interface MessageBusInterface
 {
-    public function execute(AsyncPlayerMessageInterface|SyncMessageInterface $message): void;
+    public function execute(BaseAsyncMessageInterface|SyncMessageInterface $message): void;
 }

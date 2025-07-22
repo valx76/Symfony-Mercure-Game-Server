@@ -2,7 +2,7 @@
 
 namespace App\SharedContext\Infrastructure\Bus;
 
-use App\SharedContext\Application\Bus\AsyncPlayerMessageInterface;
+use App\SharedContext\Application\Bus\BaseAsyncMessageInterface;
 use App\SharedContext\Application\Bus\MessageBusInterface;
 use App\SharedContext\Application\Bus\SyncMessageInterface;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
@@ -17,7 +17,7 @@ final readonly class MessengerMessageBus implements MessageBusInterface
     /**
      * @throws ExceptionInterface
      */
-    public function execute(AsyncPlayerMessageInterface|SyncMessageInterface $message): void
+    public function execute(BaseAsyncMessageInterface|SyncMessageInterface $message): void
     {
         $this->messageBus->dispatch($message);
     }
