@@ -21,8 +21,11 @@ Start docker:<br>
 Start local server:<br>
 `symfony server:start --no-tls`
 
-Start the RabbitMQ consumer:<br>
-`symfony console messenger:consume async`
+Start the player RabbitMQ consumer:<br>
+`symfony console messenger:consume async_player`
+
+Start the chat RabbitMQ consumer:<br>
+`symfony console messenger:consume async_message`
 
 Start the scheduler (auto disconnect idle players):<br>
 `symfony console messenger:consume scheduler_default`
