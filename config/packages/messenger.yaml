@@ -6,6 +6,7 @@ framework:
     transports:
       async_player: '%env(MESSENGER_TRANSPORT_DSN)%/player'
       async_message: '%env(MESSENGER_TRANSPORT_DSN)%/message'
+      async_pending: '%env(MESSENGER_TRANSPORT_DSN)%/pending'
       sync: 'sync://'
 
       # failed: 'doctrine://default?queue_name=failed'
@@ -13,6 +14,7 @@ framework:
     routing:
       App\SharedContext\Application\Bus\AsyncPlayerMessageInterface: async_player
       App\SharedContext\Application\Bus\AsyncChatMessageInterface: async_message
+      App\SharedContext\Application\Bus\AsyncPendingMessageInterface: async_pending
       App\SharedContext\Application\Bus\SyncMessageInterface: sync
 
 when@test:
@@ -21,3 +23,4 @@ when@test:
       transports:
         async_player: 'sync://'
         async_message: 'sync://'
+        async_pending: 'sync://'

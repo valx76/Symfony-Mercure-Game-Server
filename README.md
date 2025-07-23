@@ -27,7 +27,10 @@ Start the player RabbitMQ consumer:<br>
 Start the chat RabbitMQ consumer:<br>
 `symfony console messenger:consume async_message`
 
-Start the scheduler (auto disconnect idle players):<br>
+Start the pending level events RabbitMQ consumer (the one that triggers Mercure updates to clients):<br>
+`symfony console messenger:consume async_pending`
+
+Start the scheduler (auto disconnect idle players, prepare level refresh events):<br>
 `symfony console messenger:consume scheduler_default`
 
 ## Tools

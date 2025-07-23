@@ -2,16 +2,13 @@
 
 namespace App\Game\Application\UseCase\DisconnectPlayer;
 
-use App\Game\Application\Service\NotificationGenerator;
 use App\Game\Domain\Exception\EntityHasIncorrectDataException;
 use App\Game\Domain\Exception\EntityHasMissingDataException;
-use App\Game\Domain\Exception\LevelNotFoundException;
-use App\Game\Domain\Exception\NotificationException;
 use App\Game\Domain\Exception\PlayerNotFoundException;
 use App\Game\Domain\Exception\WorldNotFoundException;
+use App\Game\Domain\Model\Repository\PendingLevelMessageRepositoryInterface;
 use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
-use App\Game\Domain\Service\LevelFactory;
 use App\SharedContext\Application\Bus\MessageHandlerInterface;
 
 final readonly class DisconnectPlayerHandler implements MessageHandlerInterface
@@ -19,16 +16,13 @@ final readonly class DisconnectPlayerHandler implements MessageHandlerInterface
     public function __construct(
         private PlayerRepositoryInterface $playerRepository,
         private WorldRepositoryInterface $worldRepository,
-        private LevelFactory $levelFactory,
-        private NotificationGenerator $notificationGenerator,
+        private PendingLevelMessageRepositoryInterface $pendingLevelMessageRepository,
     ) {
     }
 
     /**
      * @throws EntityHasIncorrectDataException
      * @throws WorldNotFoundException
-     * @throws LevelNotFoundException
-     * @throws NotificationException
      * @throws EntityHasMissingDataException
      * @throws PlayerNotFoundException
      */
@@ -49,9 +43,7 @@ final readonly class DisconnectPlayerHandler implements MessageHandlerInterface
             $levelName = $player->levelName;
 
             if (null !== $levelName) {
-                $level = $this->levelFactory->create($levelName);
-
-                $this->notificationGenerator->generateLevelData($world, $level);
+                $this->pendingLevelMessageRepository->push($world, $levelName);
             }
         }
 

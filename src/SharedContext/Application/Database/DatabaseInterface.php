@@ -26,6 +26,10 @@ interface DatabaseInterface
 
     public function hasHashField(string $key, string $field): bool;
 
+    public function pushValueToSet(string $key, string $value): void;
+
+    public function popValueFromSet(string $key): ?string;
+
     /**
      * @throws DatabaseKeyNotFoundException
      */

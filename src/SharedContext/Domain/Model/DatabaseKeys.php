@@ -14,4 +14,7 @@ class DatabaseKeys
     public const string WORLD_KEY = 'world_%s';
     public const string WORLD_NAME = 'name';
     public const string WORLD_PLAYERS = 'players';
+
+    public const string PENDING_MESSAGE_KEY = 'pending';
+    public const string PENDING_MESSAGE_FORMAT = '%s,%s';  // 'worldId,levelName'
 }

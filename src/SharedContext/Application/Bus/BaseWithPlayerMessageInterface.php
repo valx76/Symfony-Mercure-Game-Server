@@ -2,7 +2,7 @@
 
 namespace App\SharedContext\Application\Bus;
 
-interface BaseAsyncMessageInterface
+interface BaseWithPlayerMessageInterface
 {
     public string $playerId { get; }
 }

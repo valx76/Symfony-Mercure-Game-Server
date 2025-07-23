@@ -2,11 +2,10 @@
 
 namespace App\Game\Application\UseCase\ConnectPlayer;
 
-use App\Game\Application\Service\NotificationGenerator;
 use App\Game\Domain\Exception\LevelNotFoundException;
-use App\Game\Domain\Exception\NotificationException;
 use App\Game\Domain\Exception\NoWorldAvailableException;
 use App\Game\Domain\Model\Entity\Player;
+use App\Game\Domain\Model\Repository\PendingLevelMessageRepositoryInterface;
 use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\AvailableWorldFinder;
@@ -20,10 +19,10 @@ final readonly class ConnectPlayerHandler implements MessageHandlerInterface
     public function __construct(
         private PlayerRepositoryInterface $playerRepository,
         private WorldRepositoryInterface $worldRepository,
+        private PendingLevelMessageRepositoryInterface $pendingLevelMessageRepository,
         private AvailableWorldFinder $availableWorldFinder,
         private LevelFactory $levelFactory,
         private LevelNormalizerInterface $levelNormalizer,
-        private NotificationGenerator $notificationGenerator,
         private ClockInterface $clock,
         private string $defaultLevelName,
     ) {
@@ -32,7 +31,6 @@ final readonly class ConnectPlayerHandler implements MessageHandlerInterface
     /**
      * @throws LevelNotFoundException
      * @throws NoWorldAvailableException
-     * @throws NotificationException
      */
     public function __invoke(ConnectPlayerSyncMessage $message): ConnectPlayerResult
     {
@@ -57,7 +55,7 @@ final readonly class ConnectPlayerHandler implements MessageHandlerInterface
         $this->worldRepository->save($world);
         $this->playerRepository->save($player);
 
-        $this->notificationGenerator->generateLevelData($world, $level);
+        $this->pendingLevelMessageRepository->push($world, $level::class);
 
         return new ConnectPlayerResult(
             $player->id,

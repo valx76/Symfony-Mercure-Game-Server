@@ -83,6 +83,25 @@ final readonly class RedisDatabase implements DatabaseInterface
         $this->client->hdel($this->keyPrefix.$key, [$field]);
     }
 
+    public function pushValueToSet(string $key, string $value): void
+    {
+        $this->client->zadd($this->keyPrefix.$key, [$value => time()]);
+    }
+
+    public function popValueFromSet(string $key): ?string
+    {
+        $value = $this->client->zpopmax($this->keyPrefix.$key);
+
+        if (0 === count($value)) {
+            return null;
+        }
+
+        /** @var string $valueStr */
+        $valueStr = array_keys($value)[0];
+
+        return $valueStr;
+    }
+
     /** @return string[] */
     public function findKeysByPattern(string $pattern): array
     {

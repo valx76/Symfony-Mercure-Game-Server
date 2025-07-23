@@ -2,6 +2,6 @@
 
 namespace App\SharedContext\Application\Bus;
 
-interface AsyncChatMessageInterface extends BaseAsyncMessageInterface
+interface AsyncChatMessageInterface extends BaseWithPlayerMessageInterface
 {
 }

@@ -2,11 +2,9 @@
 
 namespace App\Game\Application\UseCase\MovePlayer;
 
-use App\Game\Application\Service\NotificationGenerator;
 use App\Game\Domain\Exception\EntityHasIncorrectDataException;
 use App\Game\Domain\Exception\EntityHasMissingDataException;
 use App\Game\Domain\Exception\LevelNotFoundException;
-use App\Game\Domain\Exception\NotificationException;
 use App\Game\Domain\Exception\PlayerNotFoundException;
 use App\Game\Domain\Exception\PlayerNotInLevelException;
 use App\Game\Domain\Exception\PlayerNotInWorldException;
@@ -15,6 +13,7 @@ use App\Game\Domain\Model\Entity\Level\LevelInterface;
 use App\Game\Domain\Model\Entity\Level\TeleportPosition;
 use App\Game\Domain\Model\Entity\Player;
 use App\Game\Domain\Model\Entity\World;
+use App\Game\Domain\Model\Repository\PendingLevelMessageRepositoryInterface;
 use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\LevelFactory;
@@ -31,8 +30,8 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
     public function __construct(
         private PlayerRepositoryInterface $playerRepository,
         private WorldRepositoryInterface $worldRepository,
+        private PendingLevelMessageRepositoryInterface $pendingLevelMessageRepository,
         private LevelFactory $levelFactory,
-        private NotificationGenerator $notificationGenerator,
         private ClockInterface $clock,
     ) {
     }
@@ -48,7 +47,6 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
      * @throws PositionCollidingException
      * @throws PlayerNotInLevelException
      * @throws PlayerNotInWorldException
-     * @throws NotificationException
      */
     public function __invoke(MovePlayerAsyncMessage $message): void
     {
@@ -78,7 +76,7 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
             $this->updatePlayer($player, $player->levelName, $targetPosition);
         }
 
-        $this->notificationGenerator->generateLevelData($world, $level);
+        $this->pendingLevelMessageRepository->push($world, $levelName);
     }
 
     /**
@@ -96,20 +94,14 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
         }
     }
 
-    /**
-     * @throws NotificationException
-     * @throws LevelNotFoundException
-     */
     private function teleportPlayer(Player $player, World $world, TeleportPosition $teleportPosition): void
     {
         $targetLevelName = $teleportPosition->targetLevelName;
 
         if ($targetLevelName !== $player->levelName) {
-            $targetLevel = $this->levelFactory->create($targetLevelName);
-
             $this->updatePlayer($player, $targetLevelName, $teleportPosition->targetLevelPosition);
 
-            $this->notificationGenerator->generateLevelData($world, $targetLevel);
+            $this->pendingLevelMessageRepository->push($world, $targetLevelName);
         }
     }
 

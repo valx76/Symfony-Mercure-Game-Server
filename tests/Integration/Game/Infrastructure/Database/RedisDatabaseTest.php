@@ -135,6 +135,20 @@ class RedisDatabaseTest extends KernelTestCase
         $this->assertSame($value, $this->redisDatabase->getHashValue($key, $field));
     }
 
+    public function testPushPopValueOfSet(): void
+    {
+        $key = 'key';
+
+        $this->assertNull($this->redisDatabase->popValueFromSet($key));
+
+        $this->redisDatabase->pushValueToSet($key, 'value1');
+        $this->redisDatabase->pushValueToSet($key, 'value2');
+
+        $this->assertSame('value2', $this->redisDatabase->popValueFromSet($key));
+        $this->assertSame('value1', $this->redisDatabase->popValueFromSet($key));
+        $this->assertNull($this->redisDatabase->popValueFromSet($key));
+    }
+
     public function testFindKeysByPattern(): void
     {
         $this->redisDatabase->setValue('key1', '');
