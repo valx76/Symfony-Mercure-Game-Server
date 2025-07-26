@@ -50,6 +50,23 @@ final class PlayerContext implements Context
         $this->iHaveAPlayerIdThatDoesNotExist($playerName);
     }
 
+    #[Given('/^I have a player with id "([^"]*)"$/')]
+    public function iHaveAPlayerWithId(string $playerId): void
+    {
+        $level = $this->levelFactory->create($this->defaultLevelName);
+
+        $this->player = new Player(
+            $playerId,
+            'testPlayer',
+            $level->getSpawnPosition(),
+            new \DateTimeImmutable(),
+            $this->worldContext->world->id,
+            $this->defaultLevelName,
+        );
+
+        $this->playerRepository->save($this->player);
+    }
+
     #[Given('/^I have a player id that exists$/')]
     public function iHaveAPlayerIdThatExist(): void
     {

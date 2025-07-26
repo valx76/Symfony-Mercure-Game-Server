@@ -5,14 +5,9 @@ namespace App\Tests\Behat;
 use App\Game\Domain\Model\Entity\World;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\SharedContext\Domain\Service\UuidGeneratorInterface;
-use App\SharedContext\Infrastructure\Database\RedisDatabase;
 use App\Tests\_Helper\RedisHelperTrait;
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Hook\AfterScenario;
-use Behat\Hook\BeforeScenario;
 use Behat\Step\Given;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final class WorldContext implements Context
 {
@@ -31,6 +26,18 @@ final class WorldContext implements Context
     {
         $this->world = new World(
             $this->uuidGenerator->generate(),
+            'testWorld',
+            [],
+        );
+
+        $this->worldRepository->save($this->world);
+    }
+
+    #[Given('/^An available world exists with id "([^"]*)"$/')]
+    public function anAvailableWorldExistsWithId(string $worldId): void
+    {
+        $this->world = new World(
+            $worldId,
             'testWorld',
             [],
         );

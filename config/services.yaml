@@ -50,3 +50,6 @@ when@test:
 
     App\Tests\Behat\:
       resource: '../tests/Behat/*'
+
+    App\Tests\_Helper\Stub\HubStub: ~
+    Symfony\Component\Mercure\HubInterface: '@App\Tests\_Helper\Stub\HubStub'

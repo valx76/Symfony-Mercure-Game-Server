@@ -8,8 +8,12 @@ Feature: Test the SendMessage feature
     And An exception with violation of type "App\Game\Infrastructure\Validator\PlayerExists" should be thrown
 
   Scenario: Send a message
-    Given An available world exists
-    And I have a player id that exists
-    When I send the message "Hello"
+    Given An available world exists with id "myworld"
+    And I have a player with id "myplayer"
+    When I send the message "Hello there!"
     Then I should have a 200 response status code
     And I should have a correct SendMessage response
+    And I should have a Mercure update with topic "message_myworld_App\Game\Domain\Model\Entity\Level\Level1" and content
+      """
+      {"PLAYER":"myplayer","MESSAGE":"Hello there!"}
+      """
