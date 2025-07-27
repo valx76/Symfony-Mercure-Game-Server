@@ -2,7 +2,7 @@
 
 namespace App\Game\Application\UseCase\SendMessage;
 
-use App\Game\Application\Service\NotificationGenerator;
+use App\Game\Application\Service\NotificationGeneratorInterface;
 use App\Game\Domain\Exception\EntityHasIncorrectDataException;
 use App\Game\Domain\Exception\EntityHasMissingDataException;
 use App\Game\Domain\Exception\LevelNotFoundException;
@@ -20,7 +20,7 @@ final readonly class SendMessageHandler implements MessageHandlerInterface
         private PlayerRepositoryInterface $playerRepository,
         private WorldRepositoryInterface $worldRepository,
         private LevelFactory $levelFactory,
-        private NotificationGenerator $notificationGenerator,
+        private NotificationGeneratorInterface $notificationGenerator,
     ) {
     }
 

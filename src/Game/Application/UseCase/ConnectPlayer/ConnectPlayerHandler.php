@@ -8,7 +8,7 @@ use App\Game\Domain\Model\Entity\Player;
 use App\Game\Domain\Model\Repository\PendingLevelMessageRepositoryInterface;
 use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
-use App\Game\Domain\Service\AvailableWorldFinder;
+use App\Game\Domain\Service\AvailableWorldFinderInterface;
 use App\Game\Domain\Service\LevelFactory;
 use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\SharedContext\Application\Bus\MessageHandlerInterface;
@@ -20,7 +20,7 @@ final readonly class ConnectPlayerHandler implements MessageHandlerInterface
         private PlayerRepositoryInterface $playerRepository,
         private WorldRepositoryInterface $worldRepository,
         private PendingLevelMessageRepositoryInterface $pendingLevelMessageRepository,
-        private AvailableWorldFinder $availableWorldFinder,
+        private AvailableWorldFinderInterface $availableWorldFinder,
         private LevelFactory $levelFactory,
         private LevelNormalizerInterface $levelNormalizer,
         private ClockInterface $clock,

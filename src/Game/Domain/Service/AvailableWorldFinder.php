@@ -6,7 +6,7 @@ use App\Game\Domain\Exception\NoWorldAvailableException;
 use App\Game\Domain\Model\Entity\World;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 
-final readonly class AvailableWorldFinder
+final readonly class AvailableWorldFinder implements AvailableWorldFinderInterface
 {
     public function __construct(
         private WorldRepositoryInterface $worldRepository,
@@ -14,9 +14,6 @@ final readonly class AvailableWorldFinder
     ) {
     }
 
-    /**
-     * @throws NoWorldAvailableException
-     */
     public function find(): World
     {
         $worlds = $this->worldRepository->findAll();

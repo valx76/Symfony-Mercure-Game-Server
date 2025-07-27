@@ -2,7 +2,7 @@
 
 namespace App\Game\Infrastructure\EventListener;
 
-use App\Game\Application\Service\NotificationGenerator;
+use App\Game\Application\Service\NotificationGeneratorInterface;
 use App\Game\Domain\Exception\NotificationException;
 use App\SharedContext\Application\Bus\AsyncPlayerMessageInterface;
 use Psr\Log\LoggerInterface;
@@ -18,7 +18,7 @@ final readonly class MessengerFailedEventListener
     private const string UNKNOWN_ERROR_MESSAGE = 'Unknown error';
 
     public function __construct(
-        private NotificationGenerator $notificationGenerator,
+        private NotificationGeneratorInterface $notificationGenerator,
         private SerializerInterface $serializer,
         private LoggerInterface $logger,
     ) {

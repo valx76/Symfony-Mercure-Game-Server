@@ -9,7 +9,7 @@ use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\SharedContext\Application\Mercure\MercurePublisherInterface;
 use App\SharedContext\Domain\Model\MercureTopics;
 
-final readonly class NotificationGenerator
+final readonly class NotificationGenerator implements NotificationGeneratorInterface
 {
     public function __construct(
         private LevelNormalizerInterface $levelNormalizer,
@@ -17,9 +17,6 @@ final readonly class NotificationGenerator
     ) {
     }
 
-    /**
-     * @throws NotificationException
-     */
     public function generateLevelData(World $world, LevelInterface $level): void
     {
         try {
@@ -34,9 +31,6 @@ final readonly class NotificationGenerator
         }
     }
 
-    /**
-     * @throws NotificationException
-     */
     public function generateExceptionData(string $playerId, string $exceptionClass, string $message): void
     {
         try {
@@ -54,9 +48,6 @@ final readonly class NotificationGenerator
         }
     }
 
-    /**
-     * @throws NotificationException
-     */
     public function generateMessageData(World $world, LevelInterface $level, string $playerId, string $message): void
     {
         try {
