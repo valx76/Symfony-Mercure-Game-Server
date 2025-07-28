@@ -7,7 +7,7 @@ use App\Game\Domain\Model\Repository\PendingLevelMessageRepositoryInterface;
 use App\SharedContext\Application\Bus\MessageBusInterface;
 use Symfony\Component\Scheduler\Attribute\AsPeriodicTask;
 
-#[AsPeriodicTask(frequency: '%env(int:TASK_PUBLISH_PENDING_MESSAGE_SECS)% second')]
+#[AsPeriodicTask(frequency: '%env(int:TASK_PUBLISH_PENDING_MESSAGE_MILLISECS)% millisecond')]
 final readonly class PublishPendingMessageSchedule
 {
     public function __construct(
