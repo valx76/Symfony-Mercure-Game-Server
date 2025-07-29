@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Symfony-Mercure-Game-Client</title>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body>
+<svg id="map" xmlns="http://www.w3.org/2000/svg"
+     style="background:#333;width:400px;height:400px;display:block;margin:auto;"></svg>
+<div style="margin-top:10px;text-align:center;">
+    <p style="margin-bottom:5px;">Current player: <strong id="playerId"></strong></p>
+    <button type="button" id="chat">Send a hello chat message</button>
+</div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const LEVEL_WIDTH = 400;
+        const LEVEL_HEIGHT = 400;
+
+        const drawLevel = (data) => {
+            const width = data.width;
+            const height = data.height;
+            const tiles = data.tiles;
+            const players = data.players;
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const index = y * width + x;
+                    const value = tiles[index];
+
+                    const elt = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    elt.setAttribute('width', LEVEL_WIDTH / width);
+                    elt.setAttribute('height', LEVEL_HEIGHT / height);
+                    elt.setAttribute('x', x * (LEVEL_WIDTH / width));
+                    elt.setAttribute('y', y * (LEVEL_HEIGHT / height));
+                    elt.setAttribute('fill', value === 1 ? '#333' : '#EEE');
+                    elt.dataset.x = x;
+                    elt.dataset.y = y;
+                    document.querySelector('#map').appendChild(elt);
+                }
+            }
+
+            for (let player of players) {
+                const elt = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                elt.setAttribute('r', LEVEL_WIDTH / width / 4);
+                elt.setAttribute('cx', player.x * (LEVEL_WIDTH / width) + (LEVEL_WIDTH / width / 2));
+                elt.setAttribute('cy', player.y * (LEVEL_HEIGHT / height) + (LEVEL_HEIGHT / height / 2));
+                elt.setAttribute('fill', 'red');
+                document.querySelector('#map').appendChild(elt);
+            }
+        };
+
+        fetch('https://localhost/connect', {
+            method: 'POST',
+            body: JSON.stringify({
+                playerName: 'testPlayer'
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(res => res.json())
+            .then((json) => {
+                document.querySelector('#playerId').innerHTML = json.playerId;
+
+                const playerEventSource = new EventSource('https://localhost/.well-known/mercure?topic=player_' + json.playerId, {withCredentials: true});
+                playerEventSource.onmessage = (event) => {
+                    const error = JSON.parse(event.data);
+
+                    Toastify({
+                        text: error.MESSAGE,
+                        position: 'left',
+                        duration: 5000,
+                        style: {
+                            background: 'red',
+                        }
+                    }).showToast();
+
+                    console.log(error.EXCEPTION);
+                };
+
+                const levelEventSource = new EventSource('https://localhost/.well-known/mercure?topic=level_' + json.worldId + '_' + json.levelData.level_name, {withCredentials: true});
+                levelEventSource.onmessage = (event) => {
+                    drawLevel(
+                        JSON.parse(event.data)
+                    );
+                };
+
+                const messageEventSource = new EventSource('https://localhost/.well-known/mercure?topic=message_' + json.worldId + '_' + json.levelData.level_name, {withCredentials: true});
+                messageEventSource.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+
+                    Toastify({
+                        text: data.PLAYER + ': ' + data.MESSAGE,
+                        position: 'right',
+                        duration: 5000,
+                        style: {
+                            background: 'blue',
+                        }
+                    }).showToast();
+                };
+
+                document.querySelector('#map').onclick = (event) => {
+                    const dataset = event.target.dataset;
+
+                    if (!dataset.hasOwnProperty('x') || !dataset.hasOwnProperty('y')) return;
+
+                    const {x, y} = dataset;
+
+                    fetch('https://localhost/move', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            playerId: json.playerId,
+                            targetX: parseInt(x),
+                            targetY: parseInt(y)
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                };
+
+                document.querySelector('#chat').onclick = () => {
+                    fetch('https://localhost/message', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            playerId: json.playerId,
+                            message: 'Hello!'
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                };
+
+
+                drawLevel(json.levelData);
+            });
+
+    });
+</script>
+</body>
+
+</html>

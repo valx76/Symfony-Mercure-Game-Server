@@ -19,24 +19,14 @@ POC of a Habbo's inspired game server, developed using a clean architecture.
 Start docker:<br>
 `docker compose up`
 
-Start local server:<br>
-`symfony server:start --no-tls`
-
-Start the player RabbitMQ consumer:<br>
-`symfony console messenger:consume async_player`
 Create one or multiple worlds:<br>
 `make world <worldName>`
 
-Start the chat RabbitMQ consumer:<br>
-`symfony console messenger:consume async_message`
 Start the RabbitMQ consumers:<br>
 `make start`
 
-Start the pending level events RabbitMQ consumer (the one that triggers Mercure updates to clients):<br>
-`symfony console messenger:consume async_pending`
-
-Start the scheduler (auto disconnect idle players, prepare level refresh events):<br>
-`symfony console messenger:consume scheduler_default`
+Go to https://localhost to see the POC.<br>
+The frontend code is not the subject of this repo so don't mind the cleanliness (it is just to have an overview :).
 
 ## Tools
 
