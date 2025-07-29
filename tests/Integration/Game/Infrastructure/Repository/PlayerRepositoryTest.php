@@ -66,6 +66,7 @@ class PlayerRepositoryTest extends KernelTestCase
         $this->playerRepository->save($player3);
 
         $players = $this->playerRepository->findAll();
+        usort($players, fn (Player $a, Player $b) => strcmp($a->id, $b->id));
 
         $this->assertCount(3, $players);
         $this->assertSame($player1->id, $players[0]->id);
