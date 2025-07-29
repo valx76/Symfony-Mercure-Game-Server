@@ -17,7 +17,8 @@ final readonly class MercurePublisher implements MercurePublisherInterface
     {
         $update = new Update(
             $topic,
-            $data
+            $data,
+            private: true
         );
 
         $this->hub->publish($update);

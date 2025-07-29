@@ -12,6 +12,7 @@ use App\Game\Domain\Service\AvailableWorldFinderInterface;
 use App\Game\Domain\Service\LevelFactory;
 use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\SharedContext\Application\Bus\MessageHandlerInterface;
+use App\SharedContext\Application\Mercure\MercureAuthorizerInterface;
 use Psr\Clock\ClockInterface;
 
 final readonly class ConnectPlayerHandler implements MessageHandlerInterface
@@ -24,6 +25,7 @@ final readonly class ConnectPlayerHandler implements MessageHandlerInterface
         private LevelFactory $levelFactory,
         private LevelNormalizerInterface $levelNormalizer,
         private ClockInterface $clock,
+        private MercureAuthorizerInterface $mercureAuthorizer,
         private string $defaultLevelName,
     ) {
     }
@@ -54,6 +56,8 @@ final readonly class ConnectPlayerHandler implements MessageHandlerInterface
         // --> Then try/catch and remove player from World, and remove Player
         $this->worldRepository->save($world);
         $this->playerRepository->save($player);
+
+        $this->mercureAuthorizer->authorize($player->id, $world->id);
 
         $this->pendingLevelMessageRepository->push($world, $level::class);
 

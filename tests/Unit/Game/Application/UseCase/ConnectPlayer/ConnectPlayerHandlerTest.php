@@ -12,6 +12,7 @@ use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\AvailableWorldFinderInterface;
 use App\Game\Domain\Service\LevelFactory;
 use App\Game\Domain\Service\LevelNormalizerInterface;
+use App\SharedContext\Application\Mercure\MercureAuthorizerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
 
@@ -25,6 +26,7 @@ class ConnectPlayerHandlerTest extends TestCase
         $availableWorldFinder = $this->createMock(AvailableWorldFinderInterface::class);
         $levelNormalizer = $this->createMock(LevelNormalizerInterface::class);
         $clock = $this->createMock(ClockInterface::class);
+        $mercureAuthorizer = $this->createMock(MercureAuthorizerInterface::class);
 
         $levelFactory = new LevelFactory();
         $levelName = Level1::class;
@@ -35,6 +37,7 @@ class ConnectPlayerHandlerTest extends TestCase
 
         $worldRepository->expects($this->once())->method('save');
         $playerRepository->expects($this->once())->method('save');
+        $mercureAuthorizer->expects($this->once())->method('authorize')->with('playerId', 'worldId');
         $pendingLevelMessageRepository->expects($this->once())->method('push')->with($world, $levelName);
         $levelNormalizer->expects($this->once())->method('normalize')->with($world, $level)->willReturn([]);
 
@@ -46,6 +49,7 @@ class ConnectPlayerHandlerTest extends TestCase
             $levelFactory,
             $levelNormalizer,
             $clock,
+            $mercureAuthorizer,
             $levelName
         );
 

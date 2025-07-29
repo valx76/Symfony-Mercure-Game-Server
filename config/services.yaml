@@ -10,6 +10,10 @@ services:
       tags:
         - { name: messenger.message_handler }
 
+    App\Game\Domain\Model\Entity\Level\LevelInterface:
+      tags:
+        - { name: app.level }
+
   App\:
     resource: '../src/'
     exclude:
