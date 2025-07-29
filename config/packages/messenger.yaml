@@ -4,7 +4,11 @@ framework:
     # failure_transport: failed
 
     transports:
-      async_player: '%env(MESSENGER_TRANSPORT_DSN)%/player'
+      async_player:
+        dsn: '%env(MESSENGER_TRANSPORT_DSN)%/player'
+        retry_strategy:
+          max_retries: 0
+
       async_message: '%env(MESSENGER_TRANSPORT_DSN)%/message'
       async_pending: '%env(MESSENGER_TRANSPORT_DSN)%/pending'
       sync: 'sync://'
