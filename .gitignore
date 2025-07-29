@@ -32,6 +32,9 @@ phpstan.neon
 # Jetbrains
 /.idea/
 
+# Mercure
+*.db
+
 ###> friends-of-behat/symfony-extension ###
 /behat.yml
 ###< friends-of-behat/symfony-extension ###
