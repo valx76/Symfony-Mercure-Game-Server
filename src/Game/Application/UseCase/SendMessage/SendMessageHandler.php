@@ -13,6 +13,7 @@ use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\LevelFactory;
 use App\SharedContext\Application\Bus\MessageHandlerInterface;
+use Psr\Clock\ClockInterface;
 
 final readonly class SendMessageHandler implements MessageHandlerInterface
 {
@@ -21,6 +22,7 @@ final readonly class SendMessageHandler implements MessageHandlerInterface
         private WorldRepositoryInterface $worldRepository,
         private LevelFactory $levelFactory,
         private NotificationGeneratorInterface $notificationGenerator,
+        private ClockInterface $clock,
     ) {
     }
 
@@ -49,6 +51,9 @@ final readonly class SendMessageHandler implements MessageHandlerInterface
                 $level = $this->levelFactory->create($levelName);
 
                 $this->notificationGenerator->generateMessageData($world, $level, $message->playerId, $message->message);
+
+                $player->lastActivityTime = $this->clock->now();
+                $this->playerRepository->save($player);
             }
         }
     }

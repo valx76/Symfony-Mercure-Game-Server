@@ -13,6 +13,7 @@ use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\LevelFactory;
 use App\SharedContext\Domain\Model\ValueObject\Vector;
 use PHPUnit\Framework\TestCase;
+use Psr\Clock\ClockInterface;
 
 class SendMessageHandlerTest extends TestCase
 {
@@ -21,12 +22,14 @@ class SendMessageHandlerTest extends TestCase
         $playerRepository = $this->createMock(PlayerRepositoryInterface::class);
         $worldRepository = $this->createMock(WorldRepositoryInterface::class);
         $notificationGenerator = $this->createMock(NotificationGeneratorInterface::class);
+        $clock = $this->createMock(ClockInterface::class);
 
         $levelFactory = new LevelFactory();
         $levelName = Level1::class;
         $level = $levelFactory->create($levelName);
 
-        $player = new Player('playerId', 'playerName', new Vector(0, 0), new \DateTimeImmutable(), 'worldId', $levelName);
+        $creationTime = new \DateTimeImmutable();
+        $player = new Player('playerId', 'playerName', new Vector(0, 0), $creationTime, 'worldId', $levelName);
         $world = new World('worldId', 'worldName', [$player]);
         $message = 'Hello there!';
 
@@ -34,16 +37,20 @@ class SendMessageHandlerTest extends TestCase
         $worldRepository->method('find')->willReturn($world);
 
         $notificationGenerator->expects($this->once())->method('generateMessageData')->with($world, $level, $player->id, $message);
+        $playerRepository->expects($this->once())->method('save')->with($player);
 
         $handler = new SendMessageHandler(
             $playerRepository,
             $worldRepository,
             $levelFactory,
-            $notificationGenerator
+            $notificationGenerator,
+            $clock
         );
 
         $handler->__invoke(
             new SendMessageAsyncMessage($player->id, $message)
         );
+
+        $this->assertNotSame($player->lastActivityTime->getTimestamp(), $creationTime->getTimestamp());
     }
 }
