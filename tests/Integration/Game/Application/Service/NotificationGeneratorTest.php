@@ -4,6 +4,8 @@ namespace App\Tests\Integration\Game\Application\Service;
 
 use App\Game\Application\Service\NotificationGenerator;
 use App\Game\Domain\Model\Entity\Level\Level1;
+use App\Game\Domain\Model\Entity\Level\Level2;
+use App\Game\Domain\Model\Entity\PlayerNotificationTypeEnum;
 use App\Game\Domain\Model\Entity\World;
 use App\Game\Domain\Service\LevelFactory;
 use App\Game\Domain\Service\LevelNormalizerInterface;
@@ -71,6 +73,7 @@ class NotificationGeneratorTest extends KernelTestCase
 
         $expectedTopic = sprintf(MercureTopics::PLAYER, $playerId);
         $expectedData = json_encode([
+            'TYPE' => PlayerNotificationTypeEnum::EXCEPTION,
             'MESSAGE' => $message,
             'EXCEPTION' => $exceptionClass,
         ], JSON_THROW_ON_ERROR);
@@ -92,6 +95,38 @@ class NotificationGeneratorTest extends KernelTestCase
         $expectedData = json_encode([
             'PLAYER' => $playerId,
             'MESSAGE' => $message,
+        ], JSON_THROW_ON_ERROR);
+
+        $this->assertSame($expectedTopic, $this->mercureHub->updates[0]->getTopics()[0]);
+        $this->assertSame($expectedData, $this->mercureHub->updates[0]->getData());
+    }
+
+    public function testGenerateDisconnectData(): void
+    {
+        $playerId = 'playerId';
+
+        $this->notificationGenerator->generateDisconnectData($playerId);
+
+        $expectedTopic = sprintf(MercureTopics::PLAYER, $playerId);
+        $expectedData = json_encode([
+            'TYPE' => PlayerNotificationTypeEnum::DISCONNECT,
+        ], JSON_THROW_ON_ERROR);
+
+        $this->assertSame($expectedTopic, $this->mercureHub->updates[0]->getTopics()[0]);
+        $this->assertSame($expectedData, $this->mercureHub->updates[0]->getData());
+    }
+
+    public function testGenerateLevelChangeData(): void
+    {
+        $playerId = 'playerId';
+        $targetLevelName = Level2::class;
+
+        $this->notificationGenerator->generateLevelChangeData($playerId, $targetLevelName);
+
+        $expectedTopic = sprintf(MercureTopics::PLAYER, $playerId);
+        $expectedData = json_encode([
+            'TYPE' => PlayerNotificationTypeEnum::LEVEL_CHANGE,
+            'LEVEL' => $targetLevelName,
         ], JSON_THROW_ON_ERROR);
 
         $this->assertSame($expectedTopic, $this->mercureHub->updates[0]->getTopics()[0]);

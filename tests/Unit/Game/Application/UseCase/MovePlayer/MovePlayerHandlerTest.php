@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Game\Application\UseCase\MovePlayer;
 
+use App\Game\Application\Service\NotificationGeneratorInterface;
 use App\Game\Application\UseCase\MovePlayer\MovePlayerAsyncMessage;
 use App\Game\Application\UseCase\MovePlayer\MovePlayerHandler;
 use App\Game\Domain\Model\Entity\Level\Level1;
@@ -24,6 +25,7 @@ class MovePlayerHandlerTest extends TestCase
     private Player $player;
     private World $world;
     private PendingLevelMessageRepositoryInterface&MockObject $pendingLevelMessageRepository;
+    private NotificationGeneratorInterface&MockObject $notificationGenerator;
 
     public function testThrowPositionCollidingException(): void
     {
@@ -72,6 +74,8 @@ class MovePlayerHandlerTest extends TestCase
                 }
             });
 
+        $this->notificationGenerator->expects($this->once())->method('generateLevelChangeData')->with($this->player->id, Level2::class);
+
         $handler->__invoke(new MovePlayerAsyncMessage($this->player->id, 2, 3));
         $this->assertSame(Level2::class, $this->player->levelName);
         $this->assertSame(5, $this->player->position->x);
@@ -84,6 +88,7 @@ class MovePlayerHandlerTest extends TestCase
         $worldRepository = $this->createMock(WorldRepositoryInterface::class);
         $pendingLevelMessageRepository = $this->createMock(PendingLevelMessageRepositoryInterface::class);
         $clock = $this->createMock(ClockInterface::class);
+        $notificationGenerator = $this->createMock(NotificationGeneratorInterface::class);
         $levelFactory = new LevelFactory();
 
         $levelName = Level1::class;
@@ -96,7 +101,8 @@ class MovePlayerHandlerTest extends TestCase
         $this->player = $player;
         $this->world = $world;
         $this->pendingLevelMessageRepository = $pendingLevelMessageRepository;
+        $this->notificationGenerator = $notificationGenerator;
 
-        return new MovePlayerHandler($playerRepository, $worldRepository, $pendingLevelMessageRepository, $levelFactory, $clock);
+        return new MovePlayerHandler($playerRepository, $worldRepository, $pendingLevelMessageRepository, $levelFactory, $clock, $notificationGenerator);
     }
 }

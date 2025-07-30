@@ -22,4 +22,14 @@ interface NotificationGeneratorInterface
      * @throws NotificationException
      */
     public function generateMessageData(World $world, LevelInterface $level, string $playerId, string $message): void;
+
+    /**
+     * @throws NotificationException
+     */
+    public function generateDisconnectData(string $playerId): void;
+
+    /**
+     * @throws NotificationException
+     */
+    public function generateLevelChangeData(string $playerId, string $targetLevelName): void;
 }

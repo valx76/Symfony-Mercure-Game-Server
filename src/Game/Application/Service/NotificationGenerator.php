@@ -4,6 +4,7 @@ namespace App\Game\Application\Service;
 
 use App\Game\Domain\Exception\NotificationException;
 use App\Game\Domain\Model\Entity\Level\LevelInterface;
+use App\Game\Domain\Model\Entity\PlayerNotificationTypeEnum;
 use App\Game\Domain\Model\Entity\World;
 use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\SharedContext\Application\Mercure\MercurePublisherInterface;
@@ -35,6 +36,7 @@ final readonly class NotificationGenerator implements NotificationGeneratorInter
     {
         try {
             $data = json_encode([
+                'TYPE' => PlayerNotificationTypeEnum::EXCEPTION,
                 'MESSAGE' => $message,
                 'EXCEPTION' => $exceptionClass,
             ], JSON_THROW_ON_ERROR);
@@ -62,6 +64,39 @@ final readonly class NotificationGenerator implements NotificationGeneratorInter
             );
         } catch (\Throwable) {
             throw new NotificationException('Failed to generate message data!');
+        }
+    }
+
+    public function generateDisconnectData(string $playerId): void
+    {
+        try {
+            $data = json_encode([
+                'TYPE' => PlayerNotificationTypeEnum::DISCONNECT,
+            ], JSON_THROW_ON_ERROR);
+
+            $this->publisher->publish(
+                sprintf(MercureTopics::PLAYER, $playerId),
+                $data
+            );
+        } catch (\Throwable) {
+            throw new NotificationException('Failed to generate disconnect data!');
+        }
+    }
+
+    public function generateLevelChangeData(string $playerId, string $targetLevelName): void
+    {
+        try {
+            $data = json_encode([
+                'TYPE' => PlayerNotificationTypeEnum::LEVEL_CHANGE,
+                'LEVEL' => $targetLevelName,
+            ], JSON_THROW_ON_ERROR);
+
+            $this->publisher->publish(
+                sprintf(MercureTopics::PLAYER, $playerId),
+                $data
+            );
+        } catch (\Throwable) {
+            throw new NotificationException('Failed to generate level_change data!');
         }
     }
 }

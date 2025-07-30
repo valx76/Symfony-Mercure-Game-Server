@@ -4,6 +4,8 @@ namespace App\Tests\Unit\Game\Application\Service;
 
 use App\Game\Application\Service\NotificationGenerator;
 use App\Game\Domain\Model\Entity\Level\Level1;
+use App\Game\Domain\Model\Entity\Level\Level2;
+use App\Game\Domain\Model\Entity\PlayerNotificationTypeEnum;
 use App\Game\Domain\Model\Entity\World;
 use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\SharedContext\Application\Mercure\MercurePublisherInterface;
@@ -40,6 +42,7 @@ class NotificationGeneratorTest extends TestCase
         $message = 'testMessage';
 
         $data = json_encode([
+            'TYPE' => PlayerNotificationTypeEnum::EXCEPTION,
             'MESSAGE' => $message,
             'EXCEPTION' => $exceptionClass,
         ], JSON_THROW_ON_ERROR);
@@ -84,5 +87,53 @@ class NotificationGeneratorTest extends TestCase
 
         $notificationGenerator = new NotificationGenerator($levelNormalizer, $mercurePublisher);
         $notificationGenerator->generateMessageData($world, $level, $playerId, $message);
+    }
+
+    public function testGeneratesDisconnectData(): void
+    {
+        $playerId = 'testPlayer';
+
+        $data = json_encode([
+            'TYPE' => PlayerNotificationTypeEnum::DISCONNECT,
+        ], JSON_THROW_ON_ERROR);
+
+        $levelNormalizer = $this->createMock(LevelNormalizerInterface::class);
+
+        $mercurePublisher = $this->createMock(MercurePublisherInterface::class);
+        $mercurePublisher
+            ->expects($this->once())
+            ->method('publish')
+            ->with(
+                sprintf(MercureTopics::PLAYER, $playerId),
+                $data,
+            );
+
+        $notificationGenerator = new NotificationGenerator($levelNormalizer, $mercurePublisher);
+        $notificationGenerator->generateDisconnectData($playerId);
+    }
+
+    public function testGeneratesLevelChangeData(): void
+    {
+        $playerId = 'testPlayer';
+        $targetLevelName = Level2::class;
+
+        $data = json_encode([
+            'TYPE' => PlayerNotificationTypeEnum::LEVEL_CHANGE,
+            'LEVEL' => $targetLevelName,
+        ], JSON_THROW_ON_ERROR);
+
+        $levelNormalizer = $this->createMock(LevelNormalizerInterface::class);
+
+        $mercurePublisher = $this->createMock(MercurePublisherInterface::class);
+        $mercurePublisher
+            ->expects($this->once())
+            ->method('publish')
+            ->with(
+                sprintf(MercureTopics::PLAYER, $playerId),
+                $data,
+            );
+
+        $notificationGenerator = new NotificationGenerator($levelNormalizer, $mercurePublisher);
+        $notificationGenerator->generateLevelChangeData($playerId, $targetLevelName);
     }
 }

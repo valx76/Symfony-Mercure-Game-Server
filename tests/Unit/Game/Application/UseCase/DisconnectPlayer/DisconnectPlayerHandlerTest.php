@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Game\Application\UseCase\DisconnectPlayer;
 
+use App\Game\Application\Service\NotificationGeneratorInterface;
 use App\Game\Application\UseCase\DisconnectPlayer\DisconnectPlayerAsyncMessage;
 use App\Game\Application\UseCase\DisconnectPlayer\DisconnectPlayerHandler;
 use App\Game\Domain\Model\Entity\Level\Level1;
@@ -20,6 +21,7 @@ class DisconnectPlayerHandlerTest extends TestCase
         $playerRepository = $this->createMock(PlayerRepositoryInterface::class);
         $worldRepository = $this->createMock(WorldRepositoryInterface::class);
         $pendingLevelMessageRepository = $this->createMock(PendingLevelMessageRepositoryInterface::class);
+        $notificationGenerator = $this->createMock(NotificationGeneratorInterface::class);
 
         $levelName = Level1::class;
         $player = new Player('playerId', 'playerName', new Vector(0, 0), new \DateTimeImmutable(), 'worldId', $levelName);
@@ -30,11 +32,13 @@ class DisconnectPlayerHandlerTest extends TestCase
 
         $worldRepository->expects($this->once())->method('save');
         $pendingLevelMessageRepository->expects($this->once())->method('push')->with($world, $levelName);
+        $notificationGenerator->expects($this->once())->method('generateDisconnectData')->with($player->id);
 
         $handler = new DisconnectPlayerHandler(
             $playerRepository,
             $worldRepository,
-            $pendingLevelMessageRepository
+            $pendingLevelMessageRepository,
+            $notificationGenerator
         );
 
         $handler->__invoke(
