@@ -16,7 +16,7 @@ final readonly class Level1 implements LevelInterface
             1, 1, 1, 1, 1,
             1, 1, 0, 0, 1,
             1, 0, 0, 0, 1,
-            1, 0, 0, 0, 1,
+            1, 0, 2, 0, 1,
             1, 1, 1, 1, 1,
         ];
     }

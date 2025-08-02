@@ -27,6 +27,7 @@
     document.addEventListener("DOMContentLoaded", () => {
 
         const TILE_SIZE = 50;
+        const TILE_COLORS = ['#EEEEEE', '#333333', '#CCCCF3'];
         const mapElement = document.querySelector('#map');
 
         const drawLevel = (data) => {
@@ -50,7 +51,7 @@
                     elt.setAttribute('height', viewHeight / height);
                     elt.setAttribute('x', x * (viewWidth / width));
                     elt.setAttribute('y', y * (viewHeight / height));
-                    elt.setAttribute('fill', value === 1 ? '#333' : '#EEE');
+                    elt.setAttribute('fill', TILE_COLORS[value]);
                     elt.dataset.x = x;
                     elt.dataset.y = y;
                     mapElement.appendChild(elt);

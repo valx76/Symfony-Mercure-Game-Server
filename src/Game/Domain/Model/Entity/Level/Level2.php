@@ -15,7 +15,7 @@ final readonly class Level2 implements LevelInterface
         return [
             1, 1, 1, 1, 1, 1, 1,
             1, 0, 0, 0, 0, 0, 1,
-            1, 0, 1, 1, 1, 0, 1,
+            1, 2, 1, 1, 1, 0, 1,
         ];
     }
 
