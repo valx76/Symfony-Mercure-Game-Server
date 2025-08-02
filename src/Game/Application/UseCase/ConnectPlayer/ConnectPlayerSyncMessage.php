@@ -2,7 +2,7 @@
 
 namespace App\Game\Application\UseCase\ConnectPlayer;
 
-use App\SharedContext\Application\Bus\SyncMessageInterface;
+use App\Game\Application\Bus\SyncMessageInterface;
 
 final readonly class ConnectPlayerSyncMessage implements SyncMessageInterface
 {

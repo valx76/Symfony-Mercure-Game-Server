@@ -10,6 +10,7 @@ use App\Game\Domain\Exception\NotificationException;
 use App\Game\Domain\Exception\PlayerNotFoundException;
 use App\Game\Domain\Exception\PlayerNotInLevelException;
 use App\Game\Domain\Exception\PlayerNotInWorldException;
+use App\Game\Domain\Exception\PositionCollidingException;
 use App\Game\Domain\Exception\WorldNotFoundException;
 use App\Game\Domain\Model\Entity\Level\LevelInterface;
 use App\Game\Domain\Model\Entity\Level\TeleportPosition;
@@ -20,9 +21,8 @@ use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\LevelFactory;
 use App\SharedContext\Application\Bus\MessageHandlerInterface;
-use App\SharedContext\Domain\Exception\PositionCollidingException;
-use App\SharedContext\Domain\Exception\PositionOutOfAreaException;
 use App\SharedContext\Domain\Exception\VectorNegativeValueException;
+use App\SharedContext\Domain\Exception\VectorOutOfAreaException;
 use App\SharedContext\Domain\Model\ValueObject\Vector;
 use App\SharedContext\Domain\Service\VectorUtils;
 use Psr\Clock\ClockInterface;
@@ -46,7 +46,7 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
      * @throws EntityHasMissingDataException
      * @throws PlayerNotFoundException
      * @throws VectorNegativeValueException
-     * @throws PositionOutOfAreaException
+     * @throws VectorOutOfAreaException
      * @throws PositionCollidingException
      * @throws PlayerNotInLevelException
      * @throws PlayerNotInWorldException
@@ -85,12 +85,12 @@ final readonly class MovePlayerHandler implements MessageHandlerInterface
 
     /**
      * @throws PositionCollidingException
-     * @throws PositionOutOfAreaException
+     * @throws VectorOutOfAreaException
      */
     private function validatePosition(Vector $position, LevelInterface $level): void
     {
         if (!VectorUtils::isVectorInVector($position, $level->getSize())) {
-            throw new PositionOutOfAreaException('Incorrect position!');
+            throw new VectorOutOfAreaException('Incorrect position!');
         }
 
         if (VectorUtils::isPositionColliding($position, $level->getSize(), $level->getTiles())) {

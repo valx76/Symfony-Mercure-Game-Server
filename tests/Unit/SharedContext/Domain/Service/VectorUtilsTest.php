@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\SharedContext\Domain\Service;
 
-use App\SharedContext\Domain\Exception\PositionOutOfAreaException;
+use App\SharedContext\Domain\Exception\VectorOutOfAreaException;
 use App\SharedContext\Domain\Model\ValueObject\Vector;
 use App\SharedContext\Domain\Service\VectorUtils;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -25,7 +25,7 @@ class VectorUtilsTest extends TestCase
 
     public function testFailureWhenPositionOutsideOfArea(): void
     {
-        $this->expectException(PositionOutOfAreaException::class);
+        $this->expectException(VectorOutOfAreaException::class);
         VectorUtils::isPositionColliding(new Vector(2, 2), new Vector(1, 1), [0, 1]);
     }
 

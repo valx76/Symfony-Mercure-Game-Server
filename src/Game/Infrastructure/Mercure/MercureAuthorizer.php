@@ -1,10 +1,10 @@
 <?php
 
-namespace App\SharedContext\Infrastructure\Mercure;
+namespace App\Game\Infrastructure\Mercure;
 
+use App\Game\Application\Service\MercureAuthorizerInterface;
 use App\Game\Domain\Model\Entity\Level\LevelInterface;
-use App\SharedContext\Application\Mercure\MercureAuthorizerInterface;
-use App\SharedContext\Domain\Model\MercureTopics;
+use App\Game\Domain\Model\MercureTopics;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

@@ -2,6 +2,7 @@
 
 namespace App\Game\Application\UseCase\ConnectPlayer;
 
+use App\Game\Application\Service\MercureAuthorizerInterface;
 use App\Game\Domain\Exception\LevelNotFoundException;
 use App\Game\Domain\Exception\NoWorldAvailableException;
 use App\Game\Domain\Model\Entity\Player;
@@ -12,7 +13,6 @@ use App\Game\Domain\Service\AvailableWorldFinderInterface;
 use App\Game\Domain\Service\LevelFactory;
 use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\SharedContext\Application\Bus\MessageHandlerInterface;
-use App\SharedContext\Application\Mercure\MercureAuthorizerInterface;
 use Psr\Clock\ClockInterface;
 
 final readonly class ConnectPlayerHandler implements MessageHandlerInterface

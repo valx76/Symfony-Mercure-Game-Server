@@ -16,10 +16,10 @@ framework:
       # failed: 'doctrine://default?queue_name=failed'
 
     routing:
-      App\SharedContext\Application\Bus\AsyncPlayerMessageInterface: async_player
-      App\SharedContext\Application\Bus\AsyncChatMessageInterface: async_message
-      App\SharedContext\Application\Bus\AsyncPendingMessageInterface: async_pending
-      App\SharedContext\Application\Bus\SyncMessageInterface: sync
+      App\Game\Application\Bus\AsyncPlayerMessageInterface: async_player
+      App\Game\Application\Bus\AsyncChatMessageInterface: async_message
+      App\Game\Application\Bus\AsyncPendingMessageInterface: async_pending
+      App\Game\Application\Bus\SyncMessageInterface: sync
 
 when@test:
   framework:

@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Game\Application\UseCase\MovePlayer;
 use App\Game\Application\Service\NotificationGeneratorInterface;
 use App\Game\Application\UseCase\MovePlayer\MovePlayerAsyncMessage;
 use App\Game\Application\UseCase\MovePlayer\MovePlayerHandler;
+use App\Game\Domain\Exception\PositionCollidingException;
 use App\Game\Domain\Model\Entity\Level\Level1;
 use App\Game\Domain\Model\Entity\Level\Level2;
 use App\Game\Domain\Model\Entity\Player;
@@ -13,8 +14,7 @@ use App\Game\Domain\Model\Repository\PendingLevelMessageRepositoryInterface;
 use App\Game\Domain\Model\Repository\PlayerRepositoryInterface;
 use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\LevelFactory;
-use App\SharedContext\Domain\Exception\PositionCollidingException;
-use App\SharedContext\Domain\Exception\PositionOutOfAreaException;
+use App\SharedContext\Domain\Exception\VectorOutOfAreaException;
 use App\SharedContext\Domain\Model\ValueObject\Vector;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,11 +35,11 @@ class MovePlayerHandlerTest extends TestCase
         $handler->__invoke(new MovePlayerAsyncMessage($this->player->id, 0, 0));
     }
 
-    public function testThrowPositionOutOfAreaException(): void
+    public function testThrowVectorOutOfAreaException(): void
     {
         $handler = $this->createHandler();
 
-        $this->expectException(PositionOutOfAreaException::class);
+        $this->expectException(VectorOutOfAreaException::class);
         $handler->__invoke(new MovePlayerAsyncMessage($this->player->id, 100, 100));
     }
 

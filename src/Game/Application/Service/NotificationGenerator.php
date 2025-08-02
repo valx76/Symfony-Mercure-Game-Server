@@ -6,9 +6,9 @@ use App\Game\Domain\Exception\NotificationException;
 use App\Game\Domain\Model\Entity\Level\LevelInterface;
 use App\Game\Domain\Model\Entity\PlayerNotificationTypeEnum;
 use App\Game\Domain\Model\Entity\World;
+use App\Game\Domain\Model\MercureTopics;
 use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\SharedContext\Application\Mercure\MercurePublisherInterface;
-use App\SharedContext\Domain\Model\MercureTopics;
 
 final readonly class NotificationGenerator implements NotificationGeneratorInterface
 {

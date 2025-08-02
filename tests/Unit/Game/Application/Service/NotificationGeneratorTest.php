@@ -7,9 +7,9 @@ use App\Game\Domain\Model\Entity\Level\Level1;
 use App\Game\Domain\Model\Entity\Level\Level2;
 use App\Game\Domain\Model\Entity\PlayerNotificationTypeEnum;
 use App\Game\Domain\Model\Entity\World;
+use App\Game\Domain\Model\MercureTopics;
 use App\Game\Domain\Service\LevelNormalizerInterface;
 use App\SharedContext\Application\Mercure\MercurePublisherInterface;
-use App\SharedContext\Domain\Model\MercureTopics;
 use PHPUnit\Framework\TestCase;
 
 class NotificationGeneratorTest extends TestCase

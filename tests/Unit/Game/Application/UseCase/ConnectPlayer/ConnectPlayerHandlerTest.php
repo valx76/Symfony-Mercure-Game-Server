@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Game\Application\UseCase\ConnectPlayer;
 
+use App\Game\Application\Service\MercureAuthorizerInterface;
 use App\Game\Application\UseCase\ConnectPlayer\ConnectPlayerHandler;
 use App\Game\Application\UseCase\ConnectPlayer\ConnectPlayerSyncMessage;
 use App\Game\Domain\Model\Entity\Level\Level1;
@@ -12,7 +13,6 @@ use App\Game\Domain\Model\Repository\WorldRepositoryInterface;
 use App\Game\Domain\Service\AvailableWorldFinderInterface;
 use App\Game\Domain\Service\LevelFactory;
 use App\Game\Domain\Service\LevelNormalizerInterface;
-use App\SharedContext\Application\Mercure\MercureAuthorizerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
 

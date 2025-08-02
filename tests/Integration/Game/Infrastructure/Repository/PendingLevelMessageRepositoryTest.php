@@ -2,10 +2,10 @@
 
 namespace App\Tests\Integration\Game\Infrastructure\Repository;
 
+use App\Game\Domain\Model\DatabaseKeys;
 use App\Game\Domain\Model\Entity\World;
 use App\Game\Domain\Model\Repository\PendingLevelMessageRepositoryInterface;
 use App\Game\Infrastructure\Repository\PendingLevelMessageRepository;
-use App\SharedContext\Domain\Model\DatabaseKeys;
 use App\SharedContext\Infrastructure\Database\RedisDatabase;
 use App\Tests\_Helper\RedisHelperTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

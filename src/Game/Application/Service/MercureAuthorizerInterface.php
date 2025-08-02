@@ -1,6 +1,6 @@
 <?php
 
-namespace App\SharedContext\Application\Mercure;
+namespace App\Game\Application\Service;
 
 interface MercureAuthorizerInterface
 {

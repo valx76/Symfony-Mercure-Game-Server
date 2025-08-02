@@ -2,10 +2,10 @@
 
 namespace App\Game\Infrastructure\Repository;
 
+use App\Game\Domain\Model\DatabaseKeys;
 use App\Game\Domain\Model\Entity\World;
 use App\Game\Domain\Model\Repository\PendingLevelMessageRepositoryInterface;
 use App\SharedContext\Application\Database\DatabaseInterface;
-use App\SharedContext\Domain\Model\DatabaseKeys;
 
 final readonly class PendingLevelMessageRepository implements PendingLevelMessageRepositoryInterface
 {

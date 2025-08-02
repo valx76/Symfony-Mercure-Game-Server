@@ -1,6 +1,6 @@
 <?php
 
-namespace App\SharedContext\Domain\Model;
+namespace App\Game\Domain\Model;
 
 class MercureTopics
 {

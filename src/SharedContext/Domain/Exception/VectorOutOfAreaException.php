@@ -2,6 +2,6 @@
 
 namespace App\SharedContext\Domain\Exception;
 
-class PositionOutOfAreaException extends \Exception
+class VectorOutOfAreaException extends \Exception
 {
 }

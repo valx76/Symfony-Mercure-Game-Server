@@ -2,7 +2,7 @@
 
 namespace App\Game\Application\UseCase\MovePlayer;
 
-use App\SharedContext\Application\Bus\AsyncPlayerMessageInterface;
+use App\Game\Application\Bus\AsyncPlayerMessageInterface;
 
 final readonly class MovePlayerAsyncMessage implements AsyncPlayerMessageInterface
 {

@@ -3,7 +3,7 @@
 namespace App\SharedContext\Domain\Service;
 
 use App\Game\Domain\Model\Entity\Level\TileTypeEnum;
-use App\SharedContext\Domain\Exception\PositionOutOfAreaException;
+use App\SharedContext\Domain\Exception\VectorOutOfAreaException;
 use App\SharedContext\Domain\Model\ValueObject\Vector;
 
 class VectorUtils
@@ -16,7 +16,7 @@ class VectorUtils
     /**
      * @param int[] $tiles
      *
-     * @throws PositionOutOfAreaException
+     * @throws VectorOutOfAreaException
      */
     public static function isPositionColliding(Vector $position, Vector $size, array $tiles): bool
     {
@@ -25,7 +25,7 @@ class VectorUtils
         }
 
         if ($position->x >= $size->x || $position->y >= $size->y) {
-            throw new PositionOutOfAreaException('Incorrect position!');
+            throw new VectorOutOfAreaException('Incorrect position!');
         }
 
         $tileValue = $tiles[$position->y * $size->x + $position->x];
