@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration\Game\Infrastructure\Database;
+namespace App\Tests\Integration\SharedContext\Infrastructure\Database;
 
 use App\SharedContext\Domain\Exception\DatabaseFieldNotFoundException;
 use App\SharedContext\Domain\Exception\DatabaseKeyNotFoundException;
